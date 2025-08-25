@@ -1,6 +1,7 @@
 package dangelodavide.BackEnd.controller;
 
 import dangelodavide.BackEnd.entities.Game;
+import dangelodavide.BackEnd.service.GameService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,9 +11,9 @@ import java.util.List;
 @RequestMapping("/api/games")
 public class GameController {
 
-    private final dangelodavide.BackEnd.services.GameService gameService;
+    private final GameService gameService;
 
-    public GameController(dangelodavide.BackEnd.services.GameService gameService) { this.gameService = gameService; }
+    public GameController(GameService gameService) { this.gameService = gameService; }
 
     @GetMapping
     public List<Game> getAll() { return gameService.getAllGames(); }
