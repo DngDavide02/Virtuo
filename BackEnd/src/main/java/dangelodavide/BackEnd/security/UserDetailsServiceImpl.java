@@ -1,7 +1,7 @@
-package dangelodavide.BackEnd.Security;
+package dangelodavide.BackEnd.security;
 
 import dangelodavide.BackEnd.entities.User;
-import dangelodavide.BackEnd.Repository.UserRepository;
+import dangelodavide.BackEnd.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

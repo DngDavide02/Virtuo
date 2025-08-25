@@ -1,7 +1,5 @@
 package dangelodavide.BackEnd.security;
 
-import dangelodavide.BackEnd.Security.JwtUtils;
-import dangelodavide.BackEnd.Security.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

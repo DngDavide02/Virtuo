@@ -1,4 +1,4 @@
-package dangelodavide.BackEnd.Repository;
+package dangelodavide.BackEnd.repository;
 
 import dangelodavide.BackEnd.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;

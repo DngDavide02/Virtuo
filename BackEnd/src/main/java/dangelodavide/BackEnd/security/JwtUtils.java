@@ -1,4 +1,4 @@
-package dangelodavide.BackEnd.Security;
+package dangelodavide.BackEnd.security;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
