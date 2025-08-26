@@ -1,6 +1,7 @@
 package dangelodavide.BackEnd.service;
 
 import dangelodavide.BackEnd.DTO.GameDTO;
+import dangelodavide.BackEnd.DTO.GameResponseDTO;
 import dangelodavide.BackEnd.entities.Game;
 import dangelodavide.BackEnd.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +29,8 @@ public class GameService {
     }
 
     public Game editGame(Long id, Game updated) {
-        Game game = gameRepository.findById(id).orElseThrow(() -> new RuntimeException("Game not found"));
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Game not found"));
         game.setName(updated.getName());
         game.setDescription(updated.getDescription());
         game.setReleased(updated.getReleased());
@@ -42,7 +44,8 @@ public class GameService {
     }
 
     public Game getGame(Long id) {
-        return gameRepository.findById(id).orElseThrow(() -> new RuntimeException("Game not found"));
+        return gameRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Game not found"));
     }
 
     public List<Game> getAllGames() {
@@ -51,7 +54,7 @@ public class GameService {
 
     // --- API RAWG ---
     public List<GameDTO> getGamesFromApi(int page, int pageSize) {
-        return webClient.get()
+        GameResponseDTO response = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/games")
                         .queryParam("key", apiKey)
@@ -59,8 +62,18 @@ public class GameService {
                         .queryParam("page_size", pageSize)
                         .build())
                 .retrieve()
-                .bodyToFlux(GameDTO.class)
-                .collectList()
+                .bodyToMono(GameResponseDTO.class)
+                .block();
+
+        return response != null ? response.results() : List.of();
+    }
+
+    public GameDTO getGameFromApi(String id) {
+        return webClient.get()
+                .uri("/games/{id}?key={apiKey}", id, apiKey)
+                .retrieve()
+                .bodyToMono(GameDTO.class)
                 .block();
     }
+
 }

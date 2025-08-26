@@ -1,6 +1,7 @@
 package dangelodavide.BackEnd.controller;
 
 import dangelodavide.BackEnd.entities.Game;
+import dangelodavide.BackEnd.DTO.GameDTO;
 import dangelodavide.BackEnd.service.GameService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,24 +14,48 @@ public class GameController {
 
     private final GameService gameService;
 
-    public GameController(GameService gameService) { this.gameService = gameService; }
+    public GameController(GameService gameService) {
+        this.gameService = gameService;
+    }
 
+    // --- DB CRUD ---
     @GetMapping
-    public List<Game> getAll() { return gameService.getAllGames(); }
+    public List<Game> getAll() {
+        return gameService.getAllGames();
+    }
 
     @GetMapping("/{id}")
-    public Game get(@PathVariable Long id) { return gameService.getGame(id); }
+    public Game get(@PathVariable Long id) {
+        return gameService.getGame(id);
+    }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public Game create(@RequestBody Game game) { return gameService.addGame(game); }
+    public Game create(@RequestBody Game game) {
+        return gameService.addGame(game);
+    }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public Game update(@PathVariable Long id, @RequestBody Game game) { return gameService.editGame(id, game); }
+    public Game update(@PathVariable Long id, @RequestBody Game game) {
+        return gameService.editGame(id, game);
+    }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void delete(@PathVariable Long id) { gameService.deleteGame(id); }
-}
+    public void delete(@PathVariable Long id) {
+        gameService.deleteGame(id);
+    }
 
+    // --- RAWG API ---
+    @GetMapping("/rawg")
+    public List<GameDTO> getGamesFromApi(@RequestParam(defaultValue = "1") int page,
+                                         @RequestParam(defaultValue = "10") int pageSize) {
+        return gameService.getGamesFromApi(page, pageSize);
+    }
+
+    @GetMapping("/rawg/{id}")
+    public GameDTO getGameFromApi(@PathVariable String id) {
+        return gameService.getGameFromApi(id);
+    }
+}
