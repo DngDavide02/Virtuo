@@ -1,0 +1,59 @@
+/* ==========================
+   RESPONSIVE
+   ========================== */
+@media (max-width: 1024px) {
+  .games-card {
+    max-width: 95%;
+  }
+
+  .hero-content h2 {
+    font-size: 2.2rem;
+  }
+
+  .hero-content p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .swiper {
+    padding: 2rem 1rem 4rem;
+  }
+
+  .swiper .swiper-button-next,
+  .swiper .swiper-button-prev {
+    width: 30px;
+    height: 30px;
+  }
+
+  .games-section {
+    padding: 2rem 1rem;
+  }
+
+  .game-card {
+    height: 280px;
+  }
+
+  .hero-section {
+    height: 400px;
+    padding: 1.5rem;
+  }
+
+  .hero-content h2 {
+    font-size: 1.8rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-menu {
+    display: none;
+  }
+
+  .hero-section {
+    height: 350px;
+  }
+}

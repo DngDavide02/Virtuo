@@ -1,50 +1,69 @@
 /* ==========================
-   GENERALE: STILE DI BASE PER TUTTE LE PAGINE
+   GENERALE: STILE DI BASE
    ========================== */
-.page-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 3rem;
-  color: #e0e0e0;
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
   background: linear-gradient(45deg, #0f0f0f 0%, #2c2c2c 79%);
-  text-align: center;
+  color: #e0e0e0;
 }
 
-.page-container h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.page-container p {
-  font-size: 1.2rem;
-  max-width: 700px;
-}
-
+/* TITOLI */
+h1,
 .page-title {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: 2.8rem;
+  margin-bottom: 1.5rem;
 }
 
 .page-subtitle {
   font-size: 2rem;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
+  margin: 1rem 0 1.5rem;
 }
 
-.page-text {
-  font-size: 1.5rem;
-  max-width: 600px;
-}
-
-.page-faq {
-  max-width: 700px;
-  text-align: left;
-  margin: 2rem auto 0 auto;
+.page-text,
+p {
   font-size: 1.2rem;
   line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* ==========================
+   NAVBAR
+   ========================== */
+.navbar {
+  width: 100%;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(15, 15, 15, 0.85);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+}
+
+.navbar-logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.navbar-menu {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navbar-menu a {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar-menu a:hover {
+  color: #fff;
 }
 
 /* ==========================
@@ -82,38 +101,40 @@
   color: #e0e0e0;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .contact-form button:hover {
   background-color: #666;
+  transform: translateY(-2px);
 }
 
 /* ==========================
-   HOME PAGE / HERO IMAGE
+   HERO SECTION
    ========================== */
 .hero-section {
   position: relative;
   width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
   height: 500px;
   background-image: url("src/assets/NIGHTREIGN_launch-trailer.jpg");
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   padding: 2rem;
   color: #fff;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .hero-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 25px;
 }
 
 .hero-content {
@@ -129,8 +150,8 @@
 
 .hero-content p {
   font-size: 1.3rem;
-  margin-bottom: 2rem;
   line-height: 1.5;
+  margin-bottom: 2rem;
 }
 
 .hero-buttons {
@@ -147,28 +168,32 @@
   font-weight: bold;
   font-size: 1.1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .pill-button:hover {
   background-color: #e0e0e0;
+  transform: translateY(-2px);
 }
 
-/* GAMES SECTION */
+/* ==========================
+   GAMES SECTION
+   ========================== */
 .games-section {
-  padding: 3rem 2rem;
+  padding: 4rem 2rem;
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 
 .games-card {
   background: #1a1a1a;
   border-radius: 20px;
   padding: 2rem;
-  max-width: 80%; /* ridotta rispetto al 90% */
   width: 100%;
+  max-width: 90%;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .games-card h3 {
@@ -177,12 +202,6 @@
   color: #fff;
   text-transform: uppercase;
   letter-spacing: 1px;
-}
-
-.games-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* leggermente più strette */
-  gap: 1.5rem;
 }
 
 .game-card {
@@ -194,36 +213,35 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 370px;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  height: 320px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .game-card:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
 .game-card img {
   width: 100%;
-  height: 160px;
+  height: 150px;
   object-fit: cover;
   border-radius: 12px;
-  margin-bottom: 0.8rem;
-  transition: transform 0.4s ease;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
 }
 
 .game-card:hover img {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 .game-card h4 {
   font-size: 1rem;
-  color: #fff;
-  margin-bottom: 0.5rem;
   font-weight: 600;
+  margin-bottom: 0.8rem;
+  color: #fff;
 }
 
-/* GAME CARD BUTTONS - PILL VERTICAL */
 .game-card-buttons {
   display: flex;
   flex-direction: column;
@@ -232,8 +250,8 @@
 }
 
 .pill-button.small {
-  padding: 0.65rem 1.4rem;
-  font-size: 0.95rem;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.9rem;
   border-radius: 50px;
   border: none;
   background: linear-gradient(120deg, #fff, #ddd);
@@ -241,63 +259,122 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
 }
 
 .pill-button.small:hover {
   background: linear-gradient(120deg, #e0e0e0, #cfcfcf);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
-/* CAROUSEL HOME PAGE */
-.swiper-container {
-  position: relative;
-  padding-bottom: 3rem; /* spazio per i bullet */
-}
-
-.swiper-button-next,
-.swiper-button-prev {
-  color: #fff;
-  padding: 0.5rem;
-  border-radius: 50%;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-}
-
-.swiper-button-next {
-  right: 5px; /* leggero margine dalla card */
-}
-
-.swiper-button-prev {
-  left: 5px;
-}
-
-.swiper-pagination {
-  bottom: 5px !important; /* sposta i bullet sotto le card */
-}
-
-.swiper-pagination-bullet {
-  background: #fff;
-  opacity: 0.8;
-  transition: opacity 0.3s ease;
-  margin: 0 3px !important; /* distanza tra i bullet */
-}
-
-.swiper-pagination-bullet-active {
-  opacity: 1;
-}
-
+/* ==========================
+   SWIPER / CAROUSEL
+   ========================== */
 .swiper {
-  padding: 2rem 0; /* spazio sopra e sotto per frecce e bullets */
+  position: relative !important;
+  padding: 3rem 2rem 5rem !important;
 }
 
-.swiper-button-next,
-.swiper-button-prev {
-  color: #fff;
-  z-index: 10;
+.swiper .swiper-button-next,
+.swiper .swiper-button-prev {
+  color: #fff !important;
+  width: 35px !important;
+  height: 35px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 20 !important;
+  background: none !important;
 }
 
-.swiper-pagination {
-  bottom: 0 !important;
+.swiper .swiper-button-next {
+  right: 15px !important;
+}
+
+.swiper .swiper-button-prev {
+  left: 15px !important;
+}
+
+.swiper .swiper-pagination {
+  bottom: 15px !important;
+}
+
+.swiper .swiper-pagination-bullet {
+  background: #fff !important;
+  opacity: 0.6 !important;
+  margin: 0 6px !important;
+  transition: opacity 0.3s ease, transform 0.2s ease !important;
+}
+
+.swiper .swiper-pagination-bullet-active {
+  opacity: 1 !important;
+  transform: scale(1.2) !important;
+}
+
+/* ==========================
+   RESPONSIVE
+   ========================== */
+@media (max-width: 1024px) {
+  .games-card {
+    max-width: 95%;
+  }
+
+  .hero-content h2 {
+    font-size: 2.2rem;
+  }
+
+  .hero-content p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .swiper {
+    padding: 2rem 1rem 4rem;
+  }
+
+  .swiper .swiper-button-next,
+  .swiper .swiper-button-prev {
+    width: 30px;
+    height: 30px;
+  }
+
+  .games-section {
+    padding: 2rem 1rem;
+  }
+
+  .game-card {
+    height: 280px;
+  }
+
+  .hero-section {
+    height: 400px;
+    padding: 1.5rem;
+  }
+
+  .hero-content h2 {
+    font-size: 1.8rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-menu {
+    display: none;
+  }
+
+  .hero-section {
+    height: 350px;
+  }
+}
+
+.all-games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 50px;
+  padding: 2rem 0;
 }

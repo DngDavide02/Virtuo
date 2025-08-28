@@ -6,6 +6,8 @@ import Games from "./pages/Games";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Help from "./pages/Help";
+import "./css/base.css";
+import "./css/responsive.css";
 
 function App() {
   return (

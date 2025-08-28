@@ -1,0 +1,28 @@
+/* ==========================
+   GENERALE: STILE DI BASE
+   ========================== */
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(45deg, #0f0f0f 0%, #2c2c2c 79%);
+  color: #e0e0e0;
+}
+
+h1,
+.page-title {
+  font-size: 2.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-subtitle {
+  font-size: 2rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.page-text,
+p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
+}
