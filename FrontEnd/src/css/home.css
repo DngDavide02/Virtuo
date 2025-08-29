@@ -1,3 +1,12 @@
+:root {
+  --black: #000000;
+  --gray: #797979;
+  --brown: #a57752;
+  --orange-dark: #d2752b;
+  --orange-bright: #ff7304;
+  --text-light: #f2f2f2;
+}
+
 /* ==========================
    HERO SECTION
    ========================== */
@@ -13,16 +22,16 @@
   display: flex;
   align-items: center;
   padding: 2rem;
-  color: #fff;
+  color: var(--text-light);
   border-radius: 25px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.55);
   border-radius: 25px;
 }
 
@@ -35,12 +44,14 @@
 .hero-content h2 {
   font-size: 3rem;
   margin-bottom: 1rem;
+  color: var(--brown);
 }
 
 .hero-content p {
-  font-size: 1.3rem;
-  line-height: 1.5;
+  font-size: 1.2rem;
+  line-height: 1.6;
   margin-bottom: 2rem;
+  color: var(--gray);
 }
 
 .hero-buttons {
@@ -52,8 +63,8 @@
   padding: 1rem 2rem;
   border-radius: 50px;
   border: none;
-  background-color: #fff;
-  color: #0f0f0f;
+  background-color: var(--orange-dark);
+  color: var(--text-light);
   font-weight: bold;
   font-size: 1.1rem;
   cursor: pointer;
@@ -61,6 +72,103 @@
 }
 
 .pill-button:hover {
-  background-color: #e0e0e0;
+  background-color: var(--brown);
   transform: translateY(-2px);
+}
+
+/* ==========================
+   GAMES SECTION
+   ========================== */
+.games-section {
+  padding: 4rem 2rem;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.games-card {
+  background: var(--black);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 90%;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  transition: transform 0.3s ease;
+}
+
+.games-card h3 {
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  color: var(--brown);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.game-card {
+  background: #111;
+  border-radius: 15px;
+  overflow: hidden;
+  text-align: center;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 320px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+}
+
+.game-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.game-card:hover img {
+  transform: scale(1.03);
+}
+
+.game-card h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  color: var(--text-light);
+}
+
+.game-card-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: auto;
+}
+
+.pill-button.small {
+  padding: 0.55rem 1.2rem;
+  font-size: 0.9rem;
+  border-radius: 50px;
+  border: none;
+  background: var(--gray);
+  color: var(--text-light);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pill-button.small:hover {
+  background: var(--orange-dark);
+  transform: translateY(-1px);
+}
+
+.all-games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 50px;
+  padding: 2rem 0;
 }
