@@ -8,10 +8,12 @@ import Contact from "./pages/Contact";
 import Help from "./pages/Help";
 import "./css/base.css";
 import "./css/responsive.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import GameDetails from "./pages/GameDetails";
 
 function App() {
   return (
-    <div style={{ backgroundColor: "#0F0F0F", minHeight: "100vh", color: "#F4E964" }}>
+    <div style={{ backgroundColor: "#0F0F0F", minHeight: "100vh" }}>
       <NavigationBar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -19,6 +21,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/help" element={<Help />} />
+        <Route path="/games/:id" element={<GameDetails />} />
       </Routes>
     </div>
   );

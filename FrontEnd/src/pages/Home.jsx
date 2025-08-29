@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 import "../css/home.css";
 import "../css/swiper.css";
@@ -60,8 +61,9 @@ function Home() {
         <div className="card-overlay">
           <h4>{game.name}</h4>
           <div className="card-buttons">
-            <button className="pill-button small">View Details</button>
-            {size === "large" && <button className="pill-button small">Add to Cart</button>}
+            <Link to={`/games/${game.id}`} className="pill-button small no-link">
+              View Details
+            </Link>
           </div>
         </div>
       </div>
