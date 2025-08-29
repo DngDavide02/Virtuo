@@ -1,52 +1,112 @@
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Navbar, Nav, Container, NavDropdown, Form, FormControl, Button } from "react-bootstrap";
+import { Link, useLocation } from "react-router-dom";
 import "../css/navbar.css";
+import logo from "../assets/virtuo-logo.png";
 
-function NavigationBar() {
+export default function NavigationBar() {
+  const location = useLocation();
+  const isActive = (path) => (location.pathname === path ? "active" : "");
+
+  const navRef = useRef(null);
+  const initialOffsetRef = useRef(0);
+  const [sticky, setSticky] = useState(false);
+  const [navHeight, setNavHeight] = useState(0);
+
+  useEffect(() => {
+    const navEl = navRef.current;
+    if (!navEl) return;
+
+    const measure = () => {
+      const rect = navEl.getBoundingClientRect();
+      setNavHeight(rect.height);
+      initialOffsetRef.current = navEl.offsetTop;
+    };
+
+    measure();
+
+    const handleScroll = () => {
+      const scrollY = window.scrollY || window.pageYOffset;
+      if (scrollY > initialOffsetRef.current + 8) {
+        if (!sticky) setSticky(true);
+      } else {
+        if (sticky) setSticky(false);
+      }
+    };
+
+    const handleResize = () => {
+      measure();
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [sticky]);
+
   return (
-    <Navbar expand="lg" variant="dark" style={{ backgroundColor: "transparent" }} fixed="top">
-      <Container>
-        <Navbar.Brand as={Link} to="/" style={{ color: "#E0E0E0", fontWeight: "bold" }}>
-          Virtuo
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="main-navbar" style={{ borderColor: "#E0E0E0" }} />
-        <Navbar.Collapse id="main-navbar">
-          <Nav className="ms-auto">
-            <Nav.Link
-              as={Link}
-              to="/"
-              style={{ color: "#E0E0E0" }}
-              onMouseEnter={(e) => (e.target.style.color = "#AAAAAA")}
-              onMouseLeave={(e) => (e.target.style.color = "#E0E0E0")}
-            >
-              Home
-            </Nav.Link>
-            <Nav.Link
-              as={Link}
-              to="/games"
-              style={{ color: "#E0E0E0" }}
-              onMouseEnter={(e) => (e.target.style.color = "#AAAAAA")}
-              onMouseLeave={(e) => (e.target.style.color = "#E0E0E0")}
-            >
-              Games
-            </Nav.Link>
-            <NavDropdown title={<span style={{ color: "#E0E0E0" }}>More</span>} id="more-dropdown" menuVariant="dark">
-              <NavDropdown.Item as={Link} to="/about">
-                About
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/contact">
-                Contact
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item as={Link} to="/help">
-                Help
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+    <>
+      {sticky && <div style={{ height: navHeight }} aria-hidden="true" />}
+
+      <Navbar
+        ref={navRef}
+        expand="lg"
+        variant="dark"
+        className={`app-navbar-minimal ${sticky ? "scrolled" : ""}`}
+        fixed={sticky ? "top" : undefined}
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        <Container className="nav-container-minimal d-flex align-items-center justify-content-between">
+          <Navbar.Brand as={Link} to="/" className="brand-minimal">
+            <img src={logo} alt="Virtuo" className="brand-logo-minimal" />
+          </Navbar.Brand>
+
+          <Navbar.Toggle aria-controls="main-navbar" className="toggle-minimal" />
+          <Navbar.Collapse id="main-navbar">
+            <Nav className="ms-auto nav-items-minimal" role="menu">
+              <Nav.Link as={Link} to="/" className={`nav-link-minimal ${isActive("/")}`} aria-current={isActive("/") ? "page" : undefined}>
+                Home
+              </Nav.Link>
+              <Nav.Link as={Link} to="/games" className={`nav-link-minimal ${isActive("/games")}`}>
+                Games
+              </Nav.Link>
+              <NavDropdown
+                title={<span className="nav-link-minimal">More</span>}
+                id="more-dropdown"
+                menuVariant="dark"
+                align="end"
+                className="nav-dropdown-minimal"
+              >
+                <NavDropdown.Item as={Link} to="/about">
+                  About
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/contact">
+                  Contact
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item as={Link} to="/help">
+                  Help
+                </NavDropdown.Item>
+              </NavDropdown>
+
+              {/* Search bar e Login a destra */}
+              <Form className="d-flex ms-3 align-items-center" role="search">
+                <FormControl type="search" placeholder="Search games..." className="me-2" aria-label="Search" size="sm" />
+                <Button variant="outline-light" size="sm">
+                  Search
+                </Button>
+              </Form>
+              <Nav.Link as={Link} to="/login" className="nav-link-minimal ms-3">
+                Login
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </>
   );
 }
-
-export default NavigationBar;

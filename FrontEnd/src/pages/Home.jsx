@@ -24,17 +24,16 @@ function Home() {
       try {
         setLoading(true);
         const [carouselRes, topRes, upcomingRes, allRes] = await Promise.all([
-          axios.get(`${API_BASE}/rawg/featured?page=1&pageSize=12`),
+          axios.get(`${API_BASE}/rawg?page=1&pageSize=12`),
           axios.get(`${API_BASE}/rawg/top-rated?page=1&pageSize=8`),
           axios.get(`${API_BASE}/rawg/coming-soon?page=1&pageSize=8`),
           axios.get(`${API_BASE}/rawg?page=1&pageSize=30`),
         ]);
 
-        // Filtro giochi senza immagine
-        setCarouselGames((carouselRes.data || []).filter((game) => game.background_image));
-        setTopGames((topRes.data || []).filter((game) => game.background_image));
-        setUpcomingGames((upcomingRes.data || []).filter((game) => game.background_image));
-        setAllGames((allRes.data || []).filter((game) => game.background_image));
+        setCarouselGames(carouselRes.data || []);
+        setTopGames(topRes.data || []);
+        setUpcomingGames(upcomingRes.data || []);
+        setAllGames(allRes.data || []);
       } catch (err) {
         console.error("Error fetching games:", err);
       } finally {
