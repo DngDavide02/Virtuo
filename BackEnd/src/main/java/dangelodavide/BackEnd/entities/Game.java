@@ -1,5 +1,6 @@
 package dangelodavide.BackEnd.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AccessLevel;
@@ -25,6 +26,8 @@ public class Game {
     private String description;
 
     private String released;
+
+    @JsonProperty("background_image")
     private String backgroundImage;
 
     @DecimalMin(value = "0.0", message = "Il rating minimo è 0")
