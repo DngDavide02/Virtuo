@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Navbar, Nav, Container, NavDropdown, Form, FormControl, Button } from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown, Form, FormControl, Button, InputGroup } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import "../css/navbar.css";
 import logo from "../assets/virtuo-logo.png";
@@ -95,11 +95,14 @@ export default function NavigationBar() {
 
               {/* Search bar e Login a destra */}
               <Form className="d-flex ms-3 align-items-center" role="search">
-                <FormControl type="search" placeholder="Search games..." className="me-2" aria-label="Search" size="sm" />
-                <Button variant="outline-light" size="sm">
-                  Search
-                </Button>
+                <InputGroup>
+                  <FormControl type="search" placeholder="Search games..." className="bg-dark text-white border-0 rounded-pill" aria-label="Search" size="sm" />
+                  <Button variant="dark" size="sm" className="rounded-pill ms-2 border-0">
+                    <i class="bi bi-search"></i>
+                  </Button>
+                </InputGroup>
               </Form>
+
               <Nav.Link as={Link} to="/login" className="nav-link-minimal ms-3">
                 Login
               </Nav.Link>
