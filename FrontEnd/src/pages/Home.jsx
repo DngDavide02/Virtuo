@@ -31,10 +31,17 @@ function Home() {
           axios.get(`${API_BASE}/rawg?page=1&pageSize=30`),
         ]);
 
-        setCarouselGames(carouselRes.data || []);
-        setTopGames(topRes.data || []);
-        setUpcomingGames(upcomingRes.data || []);
-        setAllGames(allRes.data || []);
+        const carousel = carouselRes.data || [];
+        const top = (topRes.data || []).filter((g) => !carousel.some((c) => c.id === g.id));
+        const upcoming = (upcomingRes.data || []).filter((g) => !carousel.some((c) => c.id === g.id) && !top.some((t) => t.id === g.id));
+        const all = (allRes.data || []).filter(
+          (g) => !carousel.some((c) => c.id === g.id) && !top.some((t) => t.id === g.id) && !upcoming.some((u) => u.id === g.id)
+        );
+
+        setCarouselGames(carousel);
+        setTopGames(top);
+        setUpcomingGames(upcoming);
+        setAllGames(all);
       } catch (err) {
         console.error("Error fetching games:", err);
       } finally {
