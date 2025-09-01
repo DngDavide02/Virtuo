@@ -8,6 +8,7 @@ import dangelodavide.BackEnd.DTO.RegisterRequest;
 import dangelodavide.BackEnd.repository.UserRepository;
 import dangelodavide.BackEnd.security.JwtUtils;
 import dangelodavide.BackEnd.security.UserDetailsImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,19 +35,24 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@RequestBody RegisterRequest request) {
+    public ResponseEntity<String> registerUser(@RequestBody RegisterRequest request) {
         if (userRepository.existsByUsername(request.username())) {
-            return "Errore: username già esistente!";
+            return ResponseEntity
+                    .badRequest()
+                    .body("Username is already taken!");
         }
         if (userRepository.existsByEmail(request.email())) {
-            return "Errore: email già registrata!";
+            return ResponseEntity
+                    .badRequest()
+                    .body("Email is already registered!");
         }
 
-        Role role = Role.USER; // default user
+        Role role = Role.USER;
         User user = new User(request.username(), request.email(), passwordEncoder.encode(request.password()), role);
         userRepository.save(user);
-        return "Utente registrato con successo!";
+        return ResponseEntity.ok("User registered successfully!");
     }
+
 
     @PostMapping("/login")
     public JwtResponse authenticateUser(@RequestBody LoginRequest request) {
