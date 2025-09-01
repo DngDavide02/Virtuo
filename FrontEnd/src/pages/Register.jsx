@@ -18,9 +18,9 @@ function Register() {
     try {
       const res = await registerUser(username, email, password);
       setSuccess(res);
-      setTimeout(() => navigate("/login"), 3000);
+      setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
-      setError(err);
+      setError(err.error || "Registration failed");
     }
   };
 
@@ -41,7 +41,6 @@ function Register() {
           <button type="submit" className="pill-button primary">
             Register
           </button>
-
           {error && <p className="error-message">{error}</p>}
           {success && <p className="success-message">{success}</p>}
         </form>

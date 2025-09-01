@@ -10,7 +10,7 @@ export const loginUser = async (username, password) => {
     localStorage.setItem("username", user);
     return response.data;
   } catch (error) {
-    throw error.response ? error.response.data : "Login failed";
+    throw error.response ? error.response.data : { error: "Login failed" };
   }
 };
 
@@ -19,15 +19,6 @@ export const registerUser = async (username, email, password) => {
     const response = await axios.post(`${API_URL}/register`, { username, email, password });
     return response.data;
   } catch (error) {
-    throw error.response?.data || "Registration failed";
+    throw error.response ? error.response.data : { error: "Registration failed" };
   }
-};
-
-export const getCurrentUser = () => {
-  return localStorage.getItem("username");
-};
-
-export const logoutUser = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("username");
 };

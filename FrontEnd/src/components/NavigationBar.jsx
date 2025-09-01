@@ -3,6 +3,7 @@ import { Navbar, Nav, Container, NavDropdown, Form, FormControl, Button, InputGr
 import { Link, useLocation } from "react-router-dom";
 import "../css/navbar.css";
 import logo from "../assets/virtuo-logo.png";
+import { useAuth } from "../js/useAuth";
 
 export default function NavigationBar() {
   const location = useLocation();
@@ -12,6 +13,8 @@ export default function NavigationBar() {
   const initialOffsetRef = useRef(0);
   const [sticky, setSticky] = useState(false);
   const [navHeight, setNavHeight] = useState(0);
+
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const navEl = navRef.current;
@@ -93,19 +96,30 @@ export default function NavigationBar() {
                 </NavDropdown.Item>
               </NavDropdown>
 
-              {/* Search bar e Login a destra */}
               <Form className="d-flex ms-3 align-items-center" role="search">
                 <InputGroup>
                   <FormControl type="search" placeholder="Search games..." className="bg-dark text-white border-0 rounded-pill" aria-label="Search" size="sm" />
                   <Button variant="dark" size="sm" className="rounded-pill ms-2 border-0">
-                    <i class="bi bi-search"></i>
+                    <i className="bi bi-search"></i>
                   </Button>
                 </InputGroup>
               </Form>
 
-              <Nav.Link as={Link} to="/login" className="nav-link-minimal ms-3">
-                Login
-              </Nav.Link>
+              {!user ? (
+                <Nav.Link as={Link} to="/login" className="nav-link-minimal ms-3">
+                  Login
+                </Nav.Link>
+              ) : (
+                <NavDropdown
+                  title={<span className="nav-link-minimal">{user}</span>}
+                  id="user-dropdown"
+                  menuVariant="dark"
+                  align="end"
+                  className="nav-dropdown-minimal ms-3"
+                >
+                  <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
+                </NavDropdown>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
