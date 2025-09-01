@@ -17,19 +17,28 @@ import Register from "./pages/Register";
 
 function App() {
   return (
-    <div style={{ backgroundColor: "#0F0F0F", minHeight: "100vh" }}>
+    <div
+      style={{
+        backgroundColor: "#0F0F0F",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <NavigationBar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/games" element={<Games />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/help" element={<Help />} />
-        <Route path="/games/:id" element={<GameDetails />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/account" element={<Account />} />
-      </Routes>
+      <div style={{ flex: 1 }}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/games" element={<Games />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/games/:id" element={<GameDetails />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/account" element={<Account />} />
+        </Routes>
+      </div>
       <Footer />
     </div>
   );
