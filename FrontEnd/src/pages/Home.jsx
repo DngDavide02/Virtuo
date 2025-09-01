@@ -16,7 +16,7 @@ function Home() {
   const [topGames, setTopGames] = useState([]);
   const [upcomingGames, setUpcomingGames] = useState([]);
   const [allGames, setAllGames] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState("relevance");
@@ -192,39 +192,26 @@ function Home() {
               onChange={(e) => setQuery(e.target.value)}
               className="search-input"
               aria-label="Search games"
-              style={{
-                padding: "8px 10px",
-                borderRadius: 10,
-                border: "1px solid rgba(255,255,255,0.04)",
-                background: "transparent",
-                color: "var(--text-light)",
-              }}
             />
 
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              aria-label="Sort games"
-              style={{ padding: "8px", borderRadius: 10, background: "transparent", border: "1px solid rgba(255,255,255,0.04)", color: "var(--text-light)" }}
-            >
-              <option value="relevance">Relevance</option>
-              <option value="name-asc">Name A–Z</option>
-              <option value="name-desc">Name Z–A</option>
-              <option value="rating-desc">Rating (High → Low)</option>
-              <option value="released-desc">Newest</option>
-              <option value="released-asc">Oldest</option>
-            </select>
+            <div className="all-games-dropdown-wrapper">
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="all-games-dropdown" aria-label="Sort games">
+                <option value="relevance">Relevance</option>
+                <option value="name-asc">Name A–Z</option>
+                <option value="name-desc">Name Z–A</option>
+                <option value="rating-desc">Rating (High → Low)</option>
+                <option value="released-desc">Newest</option>
+                <option value="released-asc">Oldest</option>
+              </select>
+            </div>
 
-            <select
-              value={pageSize}
-              onChange={(e) => setPageSize(Number(e.target.value))}
-              aria-label="Items per page"
-              style={{ padding: "8px", borderRadius: 10, background: "transparent", border: "1px solid rgba(255,255,255,0.04)", color: "var(--text-light)" }}
-            >
-              <option value={8}>8</option>
-              <option value={12}>12</option>
-              <option value={24}>24</option>
-            </select>
+            <div className="all-games-dropdown-wrapper">
+              <select value={pageSize} onChange={(e) => setPageSize(Number(e.target.value))} className="all-games-dropdown" aria-label="Items per page">
+                <option value={8}>8</option>
+                <option value={12}>12</option>
+                <option value={24}>24</option>
+              </select>
+            </div>
           </div>
         </div>
 

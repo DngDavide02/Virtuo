@@ -383,3 +383,55 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6);
 }
+
+.search-input {
+  width: 320px;
+  max-width: 40vw;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: transparent;
+  color: var(--text-light);
+}
+
+.all-games-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.all-games-dropdown-wrapper::after {
+  content: "▾";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-light);
+  font-size: 0.8rem;
+}
+
+.all-games-dropdown {
+  background: var(--surface);
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  box-shadow: var(--card-shadow);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.all-games-dropdown option {
+  background: var(--surface);
+  color: var(--text-light);
+}
+
+.pill-button:focus,
+.game-card:focus {
+  outline: 2px solid rgba(255, 115, 4, 0.12);
+  outline-offset: 2px;
+}
