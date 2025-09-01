@@ -12,6 +12,7 @@ import "./css/base.css";
 import "./css/responsive.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import GameDetails from "./pages/GameDetails";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/help" element={<Help />} />
         <Route path="/games/:id" element={<GameDetails />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
       <Footer />
     </div>
