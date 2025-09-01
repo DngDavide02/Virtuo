@@ -3,7 +3,7 @@ import { Navbar, Nav, Container, NavDropdown, Form, FormControl, Button, InputGr
 import { Link, useLocation } from "react-router-dom";
 import "../css/navbar.css";
 import logo from "../assets/virtuo-logo.png";
-import { useAuth } from "../js/useAuth";
+import { useAuth } from "../js/AuthContext";
 
 export default function NavigationBar() {
   const location = useLocation();

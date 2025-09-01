@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../css/login.css";
 import { loginUser } from "../js/authService";
-import { useAuth } from "../js/useAuth";
+import { useAuth } from "../js/AuthContext";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -17,7 +17,7 @@ function Login() {
     try {
       const res = await loginUser(username, password);
       login(res.username);
-      setTimeout(() => navigate("/"), 1500);
+      navigate("/");
     } catch (err) {
       setError(err.error || "Login failed");
     }

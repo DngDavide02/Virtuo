@@ -1,0 +1,33 @@
+/* eslint-disable react-refresh/only-export-components */
+
+import { createContext, useContext, useState, useEffect } from "react";
+
+const AuthContext = createContext();
+
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      setUser(storedUsername);
+    }
+  }, []);
+
+  const login = (username) => {
+    localStorage.setItem("username", username);
+    setUser(username);
+  };
+
+  const logout = () => {
+    localStorage.removeItem("username");
+    localStorage.removeItem("token");
+    setUser(null);
+  };
+
+  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
+}
