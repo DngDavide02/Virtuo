@@ -9,7 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Navigation, Pagination } from "swiper";
+import { Navigation, Pagination, Autoplay } from "swiper";
 
 function Home() {
   const [carouselGames, setCarouselGames] = useState([]);
@@ -150,11 +150,16 @@ function Home() {
       <section className="games-section fade-in">
         <h3 className="section-title">Featured Games</h3>
         <Swiper
-          modules={[Navigation, Pagination]}
+          modules={[Navigation, Pagination, Autoplay]}
           spaceBetween={30}
           slidesPerView={4}
           navigation
           pagination={{ clickable: true }}
+          autoplay={{
+            delay: 3000, // ogni quanto far scorrere (ms)
+            disableOnInteraction: false, // continua l'autoplay anche se l'utente interagisce
+            pauseOnMouseEnter: true, // pausa quando il mouse è sopra
+          }}
           breakpoints={{
             320: { slidesPerView: 1, spaceBetween: 15 },
             480: { slidesPerView: 2, spaceBetween: 20 },
