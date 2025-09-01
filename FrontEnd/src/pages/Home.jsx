@@ -141,8 +141,12 @@ function Home() {
           <h1>Welcome to Virtuo</h1>
           <p>Discover, explore, and play the best games from around the world. Your next adventure starts here.</p>
           <div className="hero-buttons">
-            <button className="pill-button primary">Browse Store</button>
-            <button className="pill-button secondary">Learn More</button>
+            <Link to="/games" className="pill-button primary">
+              Browse Games
+            </Link>
+            <Link to="/about" className="pill-button secondary">
+              Learn More
+            </Link>
           </div>
         </div>
       </section>
