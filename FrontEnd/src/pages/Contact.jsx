@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../css/contact.css";
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -19,14 +20,16 @@ function Contact() {
   };
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">Contact Us</h1>
-      <form className="contact-form" onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Your Email" value={formData.email} onChange={handleChange} required />
-        <textarea name="message" placeholder="Your Message" value={formData.message} onChange={handleChange} rows="5" required />
-        <button type="submit">Send Message</button>
-      </form>
+    <div className="contact-page-wrapper">
+      <div className="contact-card">
+        <h1>Contact Us</h1>
+        <form className="contact-form" onSubmit={handleSubmit}>
+          <input type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} required />
+          <input type="email" name="email" placeholder="Your Email" value={formData.email} onChange={handleChange} required />
+          <textarea name="message" placeholder="Your Message" value={formData.message} onChange={handleChange} rows="5" required />
+          <button type="submit">Send Message</button>
+        </form>
+      </div>
     </div>
   );
 }
