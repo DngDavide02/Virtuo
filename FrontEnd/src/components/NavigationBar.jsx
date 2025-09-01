@@ -117,6 +117,10 @@ export default function NavigationBar() {
                   align="end"
                   className="nav-dropdown-minimal ms-3"
                 >
+                  <NavDropdown.Item as={Link} to="/account">
+                    Account
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
                   <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
                 </NavDropdown>
               )}

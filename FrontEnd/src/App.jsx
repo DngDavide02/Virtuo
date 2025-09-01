@@ -8,6 +8,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Help from "./pages/Help";
 import Login from "./pages/Login";
+import Account from "./pages/Account";
 import "./css/base.css";
 import "./css/responsive.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -27,6 +28,7 @@ function App() {
         <Route path="/games/:id" element={<GameDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/account" element={<Account />} />
       </Routes>
       <Footer />
     </div>
