@@ -2,6 +2,7 @@ import React from "react";
 import { Container, Button } from "react-bootstrap";
 import { useAuth } from "../js/AuthContext";
 import { Link } from "react-router-dom";
+import "../css/account.css";
 
 export default function Account() {
   const { user, logout } = useAuth();
@@ -9,26 +10,28 @@ export default function Account() {
   if (!user) return <p>Loading...</p>; // sicurezza
 
   return (
-    <Container className="mt-5">
+    <Container className="account-container">
       <h2>Account</h2>
-      <p>
-        <strong>Username:</strong> {user.username}
-      </p>
-      <p>
-        <strong>Role:</strong> {user.role}
-      </p>
 
-      {user.role === "ADMIN" && (
-        <Link to="/admin">
-          <Button variant="primary" className="mb-3">
-            Go to Admin Dashboard
-          </Button>
-        </Link>
-      )}
+      <div className="account-info">
+        <p>
+          <strong>Username:</strong> {user.username}
+        </p>
+        <p>
+          <strong>Role:</strong> {user.role}
+        </p>
+      </div>
 
-      <Button variant="danger" onClick={logout}>
-        Logout
-      </Button>
+      <div className="account-buttons">
+        {user.role === "ADMIN" && (
+          <Link to="/admin">
+            <Button variant="primary">Go to Admin Dashboard</Button>
+          </Link>
+        )}
+        <Button className="btn-logout" onClick={logout}>
+          Logout
+        </Button>
+      </div>
     </Container>
   );
 }
