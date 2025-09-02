@@ -136,4 +136,23 @@ public class GameService {
                 .toList();
     }
 
+    public List<GameDTO> getGamesFromApi(int page, int pageSize, String search) {
+        GameResponseDTO response = webClient.get()
+                .uri(uriBuilder -> {
+                    uriBuilder.path("/games")
+                            .queryParam("key", apiKey)
+                            .queryParam("page", page)
+                            .queryParam("page_size", pageSize);
+                    if (search != null && !search.isEmpty()) {
+                        uriBuilder.queryParam("search", search);
+                    }
+                    return uriBuilder.build();
+                })
+                .retrieve()
+                .bodyToMono(GameResponseDTO.class)
+                .block();
+        return response != null ? response.results() : List.of();
+    }
+
+
 }

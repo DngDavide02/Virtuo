@@ -190,7 +190,7 @@ function Home() {
       <section className="games-section all-games fade-in" aria-labelledby="all-games-heading">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginBottom: 12 }}>
           <h3 id="all-games-heading" className="section-title" style={{ margin: 0 }}>
-            All Games
+            Discover
           </h3>
 
           <div className="all-games-toolbar" style={{ display: "flex", gap: 8, alignItems: "center", marginLeft: "auto" }}>

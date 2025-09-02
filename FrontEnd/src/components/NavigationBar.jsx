@@ -1,12 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Navbar, Nav, Container, NavDropdown, Form, FormControl, Button, InputGroup } from "react-bootstrap";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../css/navbar.css";
 import logo from "../assets/virtuo-logo.png";
 import { useAuth } from "../js/AuthContext";
 
 export default function NavigationBar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const isActive = (path) => (location.pathname === path ? "active" : "");
 
   const navRef = useRef(null);
@@ -15,6 +16,7 @@ export default function NavigationBar() {
   const [navHeight, setNavHeight] = useState(0);
 
   const { user, logout } = useAuth();
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const navEl = navRef.current;
@@ -37,9 +39,7 @@ export default function NavigationBar() {
       }
     };
 
-    const handleResize = () => {
-      measure();
-    };
+    const handleResize = () => measure();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleResize);
@@ -50,19 +50,18 @@ export default function NavigationBar() {
     };
   }, [sticky]);
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim() !== "") {
+      navigate(`/games?search=${encodeURIComponent(searchTerm)}`);
+      setSearchTerm("");
+    }
+  };
+
   return (
     <>
       {sticky && <div style={{ height: navHeight }} aria-hidden="true" />}
-
-      <Navbar
-        ref={navRef}
-        expand="lg"
-        variant="dark"
-        className={`app-navbar-minimal ${sticky ? "scrolled" : ""}`}
-        fixed={sticky ? "top" : undefined}
-        role="navigation"
-        aria-label="Main navigation"
-      >
+      <Navbar ref={navRef} expand="lg" variant="dark" className={`app-navbar-minimal ${sticky ? "scrolled" : ""}`} fixed={sticky ? "top" : undefined}>
         <Container className="nav-container-minimal d-flex align-items-center justify-content-between">
           <Navbar.Brand as={Link} to="/" className="brand-minimal">
             <img src={logo} alt="Virtuo" className="brand-logo-minimal" />
@@ -70,8 +69,8 @@ export default function NavigationBar() {
 
           <Navbar.Toggle aria-controls="main-navbar" className="toggle-minimal" />
           <Navbar.Collapse id="main-navbar">
-            <Nav className="ms-auto nav-items-minimal" role="menu">
-              <Nav.Link as={Link} to="/" className={`nav-link-minimal ${isActive("/")}`} aria-current={isActive("/") ? "page" : undefined}>
+            <Nav className="ms-auto nav-items-minimal">
+              <Nav.Link as={Link} to="/" className={`nav-link-minimal ${isActive("/")}`}>
                 Home
               </Nav.Link>
               <Nav.Link as={Link} to="/games" className={`nav-link-minimal ${isActive("/games")}`}>
@@ -96,10 +95,18 @@ export default function NavigationBar() {
                 </NavDropdown.Item>
               </NavDropdown>
 
-              <Form className="d-flex ms-3 align-items-center" role="search">
+              <Form className="d-flex ms-3 align-items-center" onSubmit={handleSearchSubmit}>
                 <InputGroup>
-                  <FormControl type="search" placeholder="Search games..." className="bg-dark text-white border-0 rounded-pill" aria-label="Search" size="sm" />
-                  <Button variant="dark" size="sm" className="rounded-pill ms-2 border-0">
+                  <FormControl
+                    type="search"
+                    placeholder="Search games..."
+                    className="bg-dark text-white border-0 rounded-pill"
+                    aria-label="Search"
+                    size="sm"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <Button type="submit" variant="dark" size="sm" className="rounded-pill ms-2 border-0">
                     <i className="bi bi-search"></i>
                   </Button>
                 </InputGroup>
