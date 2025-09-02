@@ -9,11 +9,13 @@ import Contact from "./pages/Contact";
 import Help from "./pages/Help";
 import Login from "./pages/Login";
 import Account from "./pages/Account";
+import GameDetails from "./pages/GameDetails";
+import Register from "./pages/Register";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AdminDashboard from "./pages/AdminDashboard"; // <-- se hai pagina admin
 import "./css/base.css";
 import "./css/responsive.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import GameDetails from "./pages/GameDetails";
-import Register from "./pages/Register";
 
 function App() {
   return (
@@ -36,7 +38,26 @@ function App() {
           <Route path="/games/:id" element={<GameDetails />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/account" element={<Account />} />
+
+          {/* Utente loggato */}
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <Account />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Solo admin */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute role="ADMIN">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
       <Footer />

@@ -16,7 +16,8 @@ function Login() {
     setError("");
     try {
       const res = await loginUser(username, password);
-      login(res.username);
+      // res es: { username, token, role }
+      login({ username: res.username, role: res.role, token: res.token });
       navigate("/");
     } catch (err) {
       setError(err.error || "Login failed");

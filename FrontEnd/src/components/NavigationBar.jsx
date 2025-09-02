@@ -118,7 +118,7 @@ export default function NavigationBar() {
                 </Nav.Link>
               ) : (
                 <NavDropdown
-                  title={<span className="nav-link-minimal">{user}</span>}
+                  title={<span className="nav-link-minimal">{user.username}</span>}
                   id="user-dropdown"
                   menuVariant="dark"
                   align="end"

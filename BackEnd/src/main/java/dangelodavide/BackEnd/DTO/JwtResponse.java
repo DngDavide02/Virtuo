@@ -3,9 +3,10 @@ package dangelodavide.BackEnd.DTO;
 public record JwtResponse(
         String token,
         String type,
-        String username
+        String username,
+        String role
 ) {
-    public JwtResponse(String token, String username) {
-        this(token, "Bearer", username);
+    public JwtResponse(String token, String username, String role) {
+        this(token, "Bearer", username, role);
     }
 }

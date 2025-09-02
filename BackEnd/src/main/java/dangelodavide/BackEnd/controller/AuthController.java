@@ -37,22 +37,17 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody RegisterRequest request) {
         if (userRepository.existsByUsername(request.username())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("Username is already taken!");
+            return ResponseEntity.badRequest().body("Username is already taken!");
         }
         if (userRepository.existsByEmail(request.email())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("Email is already registered!");
+            return ResponseEntity.badRequest().body("Email is already registered!");
         }
 
-        Role role = Role.USER;
+        Role role = Role.USER; // default role
         User user = new User(request.username(), request.email(), passwordEncoder.encode(request.password()), role);
         userRepository.save(user);
         return ResponseEntity.ok("User registered successfully!");
     }
-
 
     @PostMapping("/login")
     public JwtResponse authenticateUser(@RequestBody LoginRequest request) {
@@ -62,6 +57,10 @@ public class AuthController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String jwt = jwtUtils.generateJwtToken(userDetails.getUsername());
-        return new JwtResponse(jwt, userDetails.getUsername());
+
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return new JwtResponse(jwt, userDetails.getUsername(), user.getRole().name());
     }
 }
