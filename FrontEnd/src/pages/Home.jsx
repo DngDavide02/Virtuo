@@ -168,17 +168,27 @@ function Home() {
       </section>
 
       <section className="games-section all-games fade-in">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
           <h3 className="section-title">Discover</h3>
-          <input type="search" placeholder="Search games..." value={query} onChange={(e) => setQuery(e.target.value)} className="search-input" />
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="all-games-dropdown">
-            <option value="relevance">Relevance</option>
-            <option value="name-asc">Name A–Z</option>
-            <option value="name-desc">Name Z–A</option>
-            <option value="rating-desc">Rating High → Low</option>
-            <option value="released-desc">Newest</option>
-            <option value="released-asc">Oldest</option>
-          </select>
+
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <input
+              type="search"
+              placeholder="Search games..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="search-input"
+              style={{ flex: 1, minWidth: 150 }}
+            />
+            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="all-games-dropdown">
+              <option value="relevance">Relevance</option>
+              <option value="name-asc">Name A–Z</option>
+              <option value="name-desc">Name Z–A</option>
+              <option value="rating-desc">Rating High → Low</option>
+              <option value="released-desc">Newest</option>
+              <option value="released-asc">Oldest</option>
+            </select>
+          </div>
         </div>
 
         <div className="all-games-grid">{paginated.map(renderGameCard)}</div>
