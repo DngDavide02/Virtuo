@@ -22,7 +22,16 @@ function Games() {
   const queryParams = new URLSearchParams(location.search);
   const query = queryParams.get("search") || "";
 
-  const API_BASE = "http://localhost:3001/api/games/rawg/filter";
+  const API_BASE = "http://localhost:3001/api/games/rawg";
+
+  // Genera lista anni dal 1980 al 2025
+  useEffect(() => {
+    const allYears = [];
+    for (let y = 2025; y >= 1980; y--) {
+      allYears.push(y);
+    }
+    setYears(allYears);
+  }, []);
 
   // Fetch generi e piattaforme
   useEffect(() => {
@@ -48,27 +57,16 @@ function Games() {
         setLoading(true);
         const params = new URLSearchParams({
           page: 1,
-          pageSize: 100,
+          page_size: 100,
         });
         if (query) params.append("search", query);
         if (selectedGenre) params.append("genres", selectedGenre);
         if (selectedPlatform) params.append("platforms", selectedPlatform);
         if (selectedYear) params.append("year", selectedYear);
-        if (sortBy && sortBy !== "relevance") params.append("ordering", sortBy);
 
-        const res = await axios.get(`${API_BASE}?${params.toString()}`);
+        const res = await axios.get(`${API_BASE}/filter?${params.toString()}`);
         const gamesData = res.data || [];
         setGames(gamesData);
-
-        // Calcolo anni disponibili dai giochi (fino al 2025)
-        const yearsSet = new Set();
-        gamesData.forEach((g) => {
-          if (g.released) {
-            const year = new Date(g.released).getFullYear();
-            if (year <= 2025) yearsSet.add(year);
-          }
-        });
-        setYears(Array.from(yearsSet).sort((a, b) => b - a));
       } catch (err) {
         console.error("Errore fetch giochi:", err);
       } finally {
@@ -76,7 +74,7 @@ function Games() {
       }
     };
     fetchGames();
-  }, [query, selectedGenre, selectedPlatform, selectedYear, sortBy]);
+  }, [query, selectedGenre, selectedPlatform, selectedYear]);
 
   const filteredAndSorted = useMemo(() => {
     let list = [...games];
