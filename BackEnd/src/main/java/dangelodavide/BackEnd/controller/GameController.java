@@ -1,7 +1,9 @@
 package dangelodavide.BackEnd.controller;
 
-import dangelodavide.BackEnd.entities.Game;
 import dangelodavide.BackEnd.DTO.GameDTO;
+import dangelodavide.BackEnd.DTO.GenreDTO;
+import dangelodavide.BackEnd.DTO.PlatformDTO;
+import dangelodavide.BackEnd.entities.Game;
 import dangelodavide.BackEnd.service.GameService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -49,13 +51,17 @@ public class GameController {
 
     // --- RAWG API ---
 
-    // Lista giochi RAWG con supporto a ricerca opzionale
-    @GetMapping("/rawg")
-    public List<GameDTO> getGamesFromApi(
+    @GetMapping("/rawg/filter")
+    public List<GameDTO> getFilteredGames(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "20") int pageSize,
-            @RequestParam(required = false) String search) {
-        return gameService.getGamesFromApi(page, pageSize, search);
+            @RequestParam(defaultValue = "50") int pageSize,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String genres,
+            @RequestParam(required = false) String platforms,
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) String ordering
+    ) {
+        return gameService.getGamesWithFilters(page, pageSize, search, genres, platforms, year, ordering);
     }
 
     @GetMapping("/rawg/{id}")
@@ -82,5 +88,22 @@ public class GameController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "12") int pageSize) {
         return gameService.getFeaturedGames(page, pageSize);
+    }
+
+    // --- RAWG Filters ---
+    @GetMapping("/genres")
+    public List<GenreDTO> getGenres(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "50") int pageSize,
+            @RequestParam(required = false) String ordering) {
+        return gameService.getGenres(page, pageSize, ordering);
+    }
+
+    @GetMapping("/platforms")
+    public List<PlatformDTO> getPlatforms(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "50") int pageSize,
+            @RequestParam(required = false) String ordering) {
+        return gameService.getPlatforms(page, pageSize, ordering);
     }
 }
