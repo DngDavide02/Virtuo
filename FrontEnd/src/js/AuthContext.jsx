@@ -1,5 +1,4 @@
 /* eslint-disable react-refresh/only-export-components */
-
 import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
@@ -9,13 +8,10 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    if (storedUser) setUser(JSON.parse(storedUser));
   }, []);
 
   const login = (userData) => {
-    // userData es: { username: "davide", role: "admin" }
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", userData.token);
     setUser(userData);
@@ -27,7 +23,23 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
-  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+  const addToLibrary = (game) => {
+    if (!user) return;
+    const updatedLibrary = [...(user.library || []), game];
+    const updatedUser = { ...user, library: updatedLibrary };
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
+  const removeFromLibrary = (gameId) => {
+    if (!user) return;
+    const updatedLibrary = (user.library || []).filter((g) => g.id !== gameId);
+    const updatedUser = { ...user, library: updatedLibrary };
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
+  return <AuthContext.Provider value={{ user, login, logout, addToLibrary, removeFromLibrary }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
