@@ -1,5 +1,6 @@
 package dangelodavide.BackEnd.controller;
 
+import dangelodavide.BackEnd.DTO.LoginResponse;
 import dangelodavide.BackEnd.entities.Role;
 import dangelodavide.BackEnd.entities.User;
 import dangelodavide.BackEnd.DTO.JwtResponse;
@@ -50,7 +51,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public JwtResponse authenticateUser(@RequestBody LoginRequest request) {
+    public LoginResponse authenticateUser(@RequestBody LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password())
         );
@@ -61,6 +62,12 @@ public class AuthController {
         User user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return new JwtResponse(jwt, userDetails.getUsername(), user.getRole().name());
+        return new LoginResponse(
+                user.getId(),
+                userDetails.getUsername(),
+                user.getRole().name(),
+                jwt
+        );
     }
+
 }

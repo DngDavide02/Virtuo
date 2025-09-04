@@ -12,6 +12,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = (userData) => {
+    // userData deve contenere id, username, role, token
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", userData.token);
     setUser(userData);
@@ -23,23 +24,7 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
-  const addToLibrary = (game) => {
-    if (!user) return;
-    const updatedLibrary = [...(user.library || []), game];
-    const updatedUser = { ...user, library: updatedLibrary };
-    setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-  };
-
-  const removeFromLibrary = (gameId) => {
-    if (!user) return;
-    const updatedLibrary = (user.library || []).filter((g) => g.id !== gameId);
-    const updatedUser = { ...user, library: updatedLibrary };
-    setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-  };
-
-  return <AuthContext.Provider value={{ user, login, logout, addToLibrary, removeFromLibrary }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
