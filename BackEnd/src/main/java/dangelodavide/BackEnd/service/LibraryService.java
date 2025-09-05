@@ -1,5 +1,6 @@
 package dangelodavide.BackEnd.service;
 
+import dangelodavide.BackEnd.DTO.GameDTO;
 import dangelodavide.BackEnd.entities.Game;
 import dangelodavide.BackEnd.entities.Library;
 import dangelodavide.BackEnd.entities.User;
@@ -32,15 +33,21 @@ public class LibraryService {
                 });
     }
 
-    public void addGameToLibrary(Long userId, Long gameId) {
+    public void addGameToLibrary(Long userId, GameDTO dto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        Game game = gameRepository.findById(gameId)
+
+        Game game = gameRepository.findById(dto.id())
                 .orElseGet(() -> {
-                    Game newGame = new Game();
-                    newGame.setId(gameId);
-                    newGame.setName("Unknown");
-                    return gameRepository.save(newGame);
+                    Game g = new Game();
+                    g.setId(dto.id());
+                    g.setName(dto.name());
+                    g.setDescription(dto.description());
+                    g.setReleased(dto.released());
+                    g.setBackgroundImage(dto.backgroundImage());
+                    g.setRating(dto.rating());
+                    return gameRepository.save(g);
                 });
+
         Library library = getOrCreateLibrary(user);
         library.addGame(game);
         libraryRepository.save(library);

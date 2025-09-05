@@ -25,6 +25,19 @@ function Home() {
 
   const API_BASE = "http://localhost:3001/api/games";
 
+  // Popola il DB alla prima apertura della pagina
+  useEffect(() => {
+    const populateDB = async () => {
+      try {
+        await axios.get(`${API_BASE}/rawg/populate?page=1&page_size=60`);
+        console.log("DB populated with RAWG games");
+      } catch (err) {
+        console.error("Error populating DB:", err);
+      }
+    };
+    populateDB();
+  }, []);
+
   // Fetch carousel, top e upcoming
   useEffect(() => {
     const fetchGames = async () => {
@@ -170,7 +183,6 @@ function Home() {
       <section className="games-section all-games fade-in">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
           <h3 className="section-title">Discover</h3>
-
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <input
               type="search"

@@ -229,4 +229,19 @@ public class GameService {
         game.setRating(dto.rating());
         gameRepository.save(game);
     }
+
+    public void populateGamesFromRawg(int page, int pageSize) {
+        List<GameDTO> games = getGamesFromApiInternal(page, pageSize, null, null);
+
+        for (GameDTO dto : games) {
+            try {
+                GameDTO detailed = getGameFromApi(String.valueOf(dto.id())); // <-- qui
+                saveGameIfNotExists(detailed);
+            } catch (Exception e) {
+                System.err.println("Failed to fetch details for game ID: " + dto.id() + " - " + e.getMessage());
+            }
+        }
+    }
+
+
 }

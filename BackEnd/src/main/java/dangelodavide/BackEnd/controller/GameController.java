@@ -106,4 +106,13 @@ public class GameController {
             @RequestParam(required = false) String ordering) {
         return gameService.getPlatforms(page, pageSize, ordering);
     }
+
+    @GetMapping("/rawg/populate")
+    public String populateGames(@RequestParam(defaultValue = "1") int page,
+                                @RequestParam(defaultValue = "50") int pageSize) {
+        gameService.populateGamesFromRawg(page, pageSize);
+        return "Games populated in DB with full description";
+    }
+
+
 }

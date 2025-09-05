@@ -1,13 +1,11 @@
 package dangelodavide.BackEnd.controller;
 
-import dangelodavide.BackEnd.entities.Game;
+import dangelodavide.BackEnd.DTO.GameDTO;
 import dangelodavide.BackEnd.service.LibraryService;
 import dangelodavide.BackEnd.security.UserDetailsImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/library")
@@ -19,10 +17,10 @@ public class LibraryController {
         this.libraryService = libraryService;
     }
 
-    @PostMapping("/add/{gameId}")
-    public ResponseEntity<String> addGame(@PathVariable Long gameId,
+    @PostMapping("/add")
+    public ResponseEntity<String> addGame(@RequestBody GameDTO gameDTO,
                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        libraryService.addGameToLibrary(userDetails.getId(), gameId);
+        libraryService.addGameToLibrary(userDetails.getId(), gameDTO);
         return ResponseEntity.ok("Game added to library");
     }
 
@@ -34,7 +32,7 @@ public class LibraryController {
     }
 
     @GetMapping
-    public ResponseEntity<Set<Game>> getLibrary(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> getLibrary(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(libraryService.getLibrary(userDetails.getId()));
     }
 }
