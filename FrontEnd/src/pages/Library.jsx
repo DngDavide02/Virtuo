@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../js/AuthContext";
-import "../css/library.css";
+import { Spinner, Card, Container, Row, Col } from "react-bootstrap";
 
-function Library() {
+const API_BASE = "http://localhost:3001/api/library";
+
+export default function Library() {
   const { user } = useAuth();
   const [games, setGames] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [actionLoading, setActionLoading] = useState(false);
-
-  const API_BASE = "http://localhost:3001/api/library";
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!user || !user.username) return;
+
     const fetchLibrary = async () => {
-      if (!user) return;
       try {
         setLoading(true);
         const token = localStorage.getItem("token");
-        const res = await axios.get(`${API_BASE}/${user.id}`, {
+        const res = await axios.get(API_BASE, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setGames(res.data);
@@ -27,45 +27,38 @@ function Library() {
         setLoading(false);
       }
     };
+
     fetchLibrary();
   }, [user]);
 
-  const handleRemoveGame = async (gameId) => {
-    try {
-      setActionLoading(true);
-      const token = localStorage.getItem("token");
-      await axios.delete(`${API_BASE}/${user.id}/remove/${gameId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setGames((prev) => prev.filter((g) => g.id !== gameId));
-    } catch (err) {
-      console.error("Error removing game:", err);
-      alert("Failed to remove game.");
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  if (loading) return <div className="loader"></div>;
-  if (games.length === 0) return <p>Your library is empty.</p>;
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center mt-5">
+        <Spinner animation="border" />
+      </div>
+    );
+  }
 
   return (
-    <div className="library-container">
-      <h2>Your Library</h2>
-      <div className="game-grid">
-        {games.map((game) => (
-          <div key={game.id} className="game-card">
-            <img src={game.background_image} alt={game.name} />
-            <h3>{game.name}</h3>
-            <p>Released: {game.released}</p>
-            <button onClick={() => handleRemoveGame(game.id)} disabled={actionLoading} className="btn-remove">
-              Remove
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
+    <Container className="mt-4">
+      <h2 className="mb-4">My Library</h2>
+      <Row>
+        {games.length === 0 ? (
+          <p>You have no games in your library.</p>
+        ) : (
+          games.map((game) => (
+            <Col key={game.id} xs={12} md={6} lg={4} className="mb-3">
+              <Card>
+                <Card.Img variant="top" src={game.background_image} />
+                <Card.Body>
+                  <Card.Title>{game.name}</Card.Title>
+                  <Card.Text>Released: {game.released}</Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))
+        )}
+      </Row>
+    </Container>
   );
 }
-
-export default Library;

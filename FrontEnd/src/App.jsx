@@ -12,7 +12,8 @@ import Account from "./pages/Account";
 import GameDetails from "./pages/GameDetails";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
-import AdminDashboard from "./pages/AdminDashboard"; // <-- se hai pagina admin
+import AdminDashboard from "./pages/AdminDashboard";
+import Library from "./pages/Library"; // <-- nuova pagina
 import "./css/base.css";
 import "./css/responsive.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -45,6 +46,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Account />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/library"
+            element={
+              <ProtectedRoute>
+                <Library />
               </ProtectedRoute>
             }
           />

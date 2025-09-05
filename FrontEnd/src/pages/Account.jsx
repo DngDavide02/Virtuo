@@ -7,7 +7,7 @@ import "../css/account.css";
 export default function Account() {
   const { user, logout } = useAuth();
 
-  if (!user) return <p>Loading...</p>; // sicurezza
+  if (!user) return <p>Loading...</p>;
 
   return (
     <Container className="account-container">
@@ -28,6 +28,9 @@ export default function Account() {
             <Button variant="primary">Go to Admin Dashboard</Button>
           </Link>
         )}
+        <Link to="/library">
+          <Button variant="secondary">Go to My Library</Button>
+        </Link>
         <Button className="btn-logout" onClick={logout}>
           Logout
         </Button>

@@ -2,7 +2,9 @@ package dangelodavide.BackEnd.controller;
 
 import dangelodavide.BackEnd.entities.Game;
 import dangelodavide.BackEnd.service.LibraryService;
+import dangelodavide.BackEnd.security.UserDetailsImpl;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -17,20 +19,22 @@ public class LibraryController {
         this.libraryService = libraryService;
     }
 
-    @PostMapping("/{userId}/add/{gameId}")
-    public ResponseEntity<String> addGame(@PathVariable Long userId, @PathVariable Long gameId) {
-        libraryService.addGameToLibrary(userId, gameId);
-        return ResponseEntity.ok("Game added to library!");
+    @PostMapping("/add/{gameId}")
+    public ResponseEntity<String> addGame(@PathVariable Long gameId,
+                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        libraryService.addGameToLibrary(userDetails.getId(), gameId);
+        return ResponseEntity.ok("Game added to library");
     }
 
-    @DeleteMapping("/{userId}/remove/{gameId}")
-    public ResponseEntity<String> removeGame(@PathVariable Long userId, @PathVariable Long gameId) {
-        libraryService.removeGameFromLibrary(userId, gameId);
-        return ResponseEntity.ok("Game removed from library!");
+    @DeleteMapping("/remove/{gameId}")
+    public ResponseEntity<String> removeGame(@PathVariable Long gameId,
+                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        libraryService.removeGameFromLibrary(userDetails.getId(), gameId);
+        return ResponseEntity.ok("Game removed from library");
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<Set<Game>> getLibrary(@PathVariable Long userId) {
-        return ResponseEntity.ok(libraryService.getLibrary(userId));
+    @GetMapping
+    public ResponseEntity<Set<Game>> getLibrary(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(libraryService.getLibrary(userDetails.getId()));
     }
 }

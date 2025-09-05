@@ -11,18 +11,18 @@ export default function GameDetails() {
   const { user, addToLibrary } = useAuth();
 
   useEffect(() => {
+    const fetchGame = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3001/api/games/${id}`);
+        setGame(res.data);
+      } catch (err) {
+        console.error("Error fetching game:", err);
+        setError("Unable to fetch game data.");
+      }
+    };
+
     fetchGame();
   }, [id]);
-
-  const fetchGame = async () => {
-    try {
-      const res = await axios.get(`http://localhost:3001/api/rawg/games/${id}`);
-      setGame(res.data);
-    } catch (err) {
-      console.error("Error fetching game:", err);
-      setError("Unable to fetch game data.");
-    }
-  };
 
   const handleAddToLibrary = async () => {
     if (!user) {
@@ -31,7 +31,7 @@ export default function GameDetails() {
     }
     try {
       await axios.post(
-        `http://localhost:3001/api/library/${user.id}/add/${id}`,
+        `http://localhost:3001/api/library/add/${id}`,
         {},
         {
           headers: { Authorization: `Bearer ${user.token}` },
@@ -49,8 +49,8 @@ export default function GameDetails() {
   return (
     <div className="game-details-container">
       <h1>{game.name}</h1>
-      <img src={game.background_image} alt={game.name} />
-      <p>{game.description_raw}</p>
+      <img src={game.backgroundImage || game.background_image} alt={game.name} />
+      <p>{game.description || game.description_raw}</p>
       <button onClick={handleAddToLibrary} className="pill-button primary">
         Add to Library
       </button>

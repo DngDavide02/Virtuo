@@ -14,8 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Game {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Setter(AccessLevel.NONE)
     private Long id;
 
     @NotBlank(message = "Il nome è obbligatorio")

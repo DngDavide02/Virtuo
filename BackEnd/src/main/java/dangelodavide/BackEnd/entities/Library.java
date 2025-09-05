@@ -31,9 +31,14 @@ public class Library {
     }
 
     public Long getId() { return id; }
-    public User getUser() { return user; }
-    public Set<Game> getGames() { return games; }
+    public void setId(Long id) { this.id = id; }
 
-    public void addGame(Game game) { games.add(game); }
-    public void removeGame(Game game) { games.remove(game); }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+
+    public Set<Game> getGames() { return games; }
+    public void setGames(Set<Game> games) { this.games = games; }
+
+    public void addGame(Game game) { this.games.add(game); }
+    public void removeGame(Game game) { this.games.remove(game); }
 }
