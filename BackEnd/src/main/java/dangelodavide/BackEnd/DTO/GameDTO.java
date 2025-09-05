@@ -1,12 +1,15 @@
 package dangelodavide.BackEnd.DTO;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public record GameDTO(
-        Long id,
-        String name,
-        String description,
-        String released,
-        @JsonProperty("background_image") String backgroundImage,
+        int id,
+        String title,
+        String thumbnail,
+        String short_description,
+        String game_url,
+        String genre,
+        String platform,
+        String publisher,
+        String developer,
+        String releaseDate,
         Double rating
 ) {}

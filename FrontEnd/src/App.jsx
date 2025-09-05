@@ -13,7 +13,7 @@ import GameDetails from "./pages/GameDetails";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminDashboard from "./pages/AdminDashboard";
-import Library from "./pages/Library"; // <-- nuova pagina
+import Library from "./pages/Library";
 import "./css/base.css";
 import "./css/responsive.css";
 import "bootstrap-icons/font/bootstrap-icons.css";

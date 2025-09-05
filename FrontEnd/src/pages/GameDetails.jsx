@@ -88,7 +88,7 @@ export default function GameDetails() {
 
       <section className="game-description-section">
         <h2 className="section-title">Description</h2>
-        <p>{game.description || game.description_raw || "No description available."}</p>
+        <div className="game-description" dangerouslySetInnerHTML={{ __html: game.description || game.description_raw || "No description available." }}></div>
         <button onClick={handleAddToLibrary} className="pill-button primary">
           Add to Library
         </button>
