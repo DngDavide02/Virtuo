@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/games/free").permitAll() // libera la route verso FreeToGame
+                        .requestMatchers("/api/games/**").permitAll() // libero per test
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/library/**").hasRole("USER")
                         .anyRequest().authenticated()

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import axiosInstance from "../js/axiosInstance";
 
 import "../css/home.css";
 import "../css/swiper.css";
@@ -16,29 +16,25 @@ function Home() {
   const [topGames, setTopGames] = useState([]);
   const [upcomingGames, setUpcomingGames] = useState([]);
   const [allGames, setAllGames] = useState([]);
-  const [_loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState("relevance");
-  const [pageSize, _setPageSize] = useState(12);
+  const [pageSize] = useState(12);
   const [page, setPage] = useState(1);
 
-  const API_BASE = "http://localhost:3001/api";
-
-  // Fetch carousel, top e upcoming
+  // Carica giochi principali (carousel, top, upcoming)
   useEffect(() => {
     const fetchGames = async () => {
       try {
         setLoading(true);
-        const [carouselRes, topRes, upcomingRes] = await Promise.all([
-          axios.get(`${API_BASE}/carousel`),
-          axios.get(`${API_BASE}/top`),
-          axios.get(`${API_BASE}/upcoming`),
-        ]);
+        const res = await axiosInstance.get("/games");
+        const games = res.data || [];
 
-        setCarouselGames(carouselRes.data || []);
-        setTopGames(topRes.data || []);
-        setUpcomingGames(upcomingRes.data || []);
+        setCarouselGames(games.slice(0, 15));
+        setTopGames([...games].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 12));
+        setUpcomingGames(games.filter((g) => new Date(g.release_date) > new Date()).slice(0, 12));
+        setAllGames(games);
       } catch (err) {
         console.error("Error fetching games:", err);
       } finally {
@@ -48,46 +44,36 @@ function Home() {
     fetchGames();
   }, []);
 
-  // Fetch allGames per Discover
-  useEffect(() => {
-    const fetchAllGames = async () => {
-      try {
-        setLoading(true);
-        const res = await axios.get(`${API_BASE}/all`, {
-          params: {
-            category: query || undefined,
-            sortBy: sortBy !== "relevance" ? sortBy : undefined,
-          },
-        });
-        setAllGames(res.data || []);
-      } catch (err) {
-        console.error("Error fetching discover games:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAllGames();
-  }, [query, sortBy]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [query, sortBy, pageSize]);
-
-  const getImage = (game) => game.thumbnail || "/img/default-game.jpg";
-  const getName = (game) => game.title || "Unknown";
-  const getReleased = (game) => game.releaseDate || "TBA";
-
+  // Filtra e ordina giochi in Discover
   const filteredAndSorted = useMemo(() => {
     let list = allGames.slice();
 
-    if (sortBy === "name-asc") list.sort((a, b) => getName(a).localeCompare(getName(b)));
-    else if (sortBy === "name-desc") list.sort((a, b) => getName(b).localeCompare(getName(a)));
-    else if (sortBy === "rating-desc") list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-    else if (sortBy === "released-desc") list.sort((a, b) => new Date(getReleased(b)) - new Date(getReleased(a)));
-    else if (sortBy === "released-asc") list.sort((a, b) => new Date(getReleased(a)) - new Date(getReleased(b)));
+    if (query) {
+      list = list.filter((g) => g.title.toLowerCase().includes(query.toLowerCase()));
+    }
+
+    switch (sortBy) {
+      case "name-asc":
+        list.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case "name-desc":
+        list.sort((a, b) => b.title.localeCompare(a.title));
+        break;
+      case "rating-desc":
+        list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        break;
+      case "released-desc":
+        list.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+        break;
+      case "released-asc":
+        list.sort((a, b) => new Date(a.release_date) - new Date(b.release_date));
+        break;
+      default:
+        break;
+    }
 
     return list;
-  }, [allGames, sortBy]);
+  }, [allGames, query, sortBy]);
 
   const paginated = useMemo(() => filteredAndSorted.slice(0, page * pageSize), [filteredAndSorted, page, pageSize]);
   const hasMore = paginated.length < filteredAndSorted.length;
@@ -95,9 +81,9 @@ function Home() {
   const renderGameCard = (game) => (
     <div className="game-card large" key={game.id}>
       <div className="game-image-wrapper">
-        <img src={getImage(game)} alt={getName(game)} loading="lazy" />
+        <img src={game.thumbnail || "/img/default-game.jpg"} alt={game.title || "Unknown"} loading="lazy" />
         <div className="card-overlay">
-          <h4>{getName(game)}</h4>
+          <h4>{game.title || "Unknown"}</h4>
           <div className="card-buttons">
             <Link to={`/games/${game.id}`} className="pill-button small no-link">
               View Details
@@ -107,13 +93,15 @@ function Home() {
       </div>
       <div className="game-footer">
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <span style={{ fontWeight: 700, fontSize: 13, color: "white" }}>{getName(game)}</span>
-          <span style={{ fontSize: 12, color: "var(--muted)" }}>{getReleased(game)}</span>
+          <span style={{ fontWeight: 700, fontSize: 13, color: "white" }}>{game.title || "Unknown"}</span>
+          <span style={{ fontSize: 12, color: "var(--muted)" }}>{game.release_date || "TBA"}</span>
         </div>
         <div className="rating">{(game.rating || 0).toFixed(1)}</div>
       </div>
     </div>
   );
+
+  if (loading) return <div className="loading">Loading games...</div>;
 
   return (
     <div className="container">
@@ -143,14 +131,9 @@ function Home() {
           navigation
           pagination={{ clickable: true }}
           autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-          breakpoints={{
-            320: { slidesPerView: 1, slidesPerGroup: 1 },
-            480: { slidesPerView: 2, slidesPerGroup: 2 },
-            768: { slidesPerView: 3, slidesPerGroup: 3 },
-            1024: { slidesPerView: 3, slidesPerGroup: 3 },
-          }}
+          breakpoints={{ 320: { slidesPerView: 1 }, 480: { slidesPerView: 2 }, 768: { slidesPerView: 3 }, 1024: { slidesPerView: 3 } }}
         >
-          {carouselGames.slice(0, 15).map((game) => (
+          {carouselGames.map((game) => (
             <SwiperSlide key={game.id}>{renderGameCard(game)}</SwiperSlide>
           ))}
         </Swiper>
@@ -188,9 +171,7 @@ function Home() {
             </select>
           </div>
         </div>
-
         <div className="all-games-grid">{paginated.map(renderGameCard)}</div>
-
         <div style={{ display: "flex", justifyContent: "center", marginTop: 18, gap: 12 }}>
           {hasMore ? (
             <button onClick={() => setPage((p) => p + 1)} className="pill-button primary">

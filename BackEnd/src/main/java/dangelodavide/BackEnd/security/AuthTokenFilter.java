@@ -27,23 +27,38 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+
         String header = request.getHeader("Authorization");
         String token = null;
         String username = null;
 
         if (header != null && header.startsWith("Bearer ")) {
             token = header.substring(7);
-            username = jwtUtils.getUsernameFromJwtToken(token);
+            try {
+                username = jwtUtils.getUsernameFromJwtToken(token);
+                System.out.println("[DEBUG] JWT username: " + username);
+            } catch (Exception e) {
+                System.out.println("[DEBUG] Invalid JWT: " + e.getMessage());
+            }
+        } else {
+            System.out.println("[DEBUG] No Authorization header or bad format");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if (jwtUtils.validateJwtToken(token)) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
-                );
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            try {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                if (jwtUtils.validateJwtToken(token)) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities()
+                    );
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    System.out.println("[DEBUG] Authenticated user: " + username);
+                } else {
+                    System.out.println("[DEBUG] JWT validation failed");
+                }
+            } catch (Exception e) {
+                System.out.println("[DEBUG] UserDetails load failed: " + e.getMessage());
             }
         }
 

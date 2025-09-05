@@ -14,7 +14,6 @@ public class JwtUtils {
 
     private final long jwtExpirationMs = 24 * 60 * 60 * 1000;
 
-
     public String generateJwtToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
@@ -33,6 +32,7 @@ public class JwtUtils {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
+            System.out.println("[DEBUG] JWT validation error: " + e.getMessage());
             return false;
         }
     }
