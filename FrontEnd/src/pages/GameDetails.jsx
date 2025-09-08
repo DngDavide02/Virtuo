@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../js/axiosInstance";
 import { useAuth } from "../js/AuthContext";
 import "../css/gameDetails.css";
 
@@ -13,7 +13,7 @@ export default function GameDetails() {
   useEffect(() => {
     const fetchGame = async () => {
       try {
-        const res = await axios.get(`http://localhost:3001/api/games/${id}`);
+        const res = await axiosInstance.get(`/games/${id}`);
         setGame(res.data);
       } catch (err) {
         console.error("Error fetching game:", err);
@@ -32,14 +32,14 @@ export default function GameDetails() {
     try {
       const gameDTO = {
         id: game.id,
-        name: game.name,
-        description: game.description || game.description_raw || "",
-        released: game.released,
-        backgroundImage: game.backgroundImage || game.background_image,
+        name: game.title,
+        description: game.shortDescription || "No description available.",
+        released: game.release_date,
+        backgroundImage: game.thumbnail,
         rating: game.rating || 0,
       };
 
-      await axios.post(`http://localhost:3001/api/library/add`, gameDTO, {
+      await axiosInstance.post(`/library/add`, gameDTO, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
 
@@ -58,38 +58,24 @@ export default function GameDetails() {
         <div
           className="game-hero-image"
           style={{
-            backgroundImage: `url(${game.backgroundImage || game.background_image || "https://via.placeholder.com/800x500"})`,
+            backgroundImage: `url(${game.thumbnail || "https://via.placeholder.com/800x500"})`,
           }}
         ></div>
         <div className="game-hero-overlay"></div>
         <div className="game-hero-content">
-          <h1>{game.name}</h1>
-          {game.released && <p className="release-date">Released: {game.released}</p>}
-          {game.genres && game.genres.length > 0 && (
-            <div className="game-badges">
-              {game.genres.map((genre) => (
-                <span key={genre.id} className="badge genre">
-                  {genre.name}
-                </span>
-              ))}
-            </div>
-          )}
-          {game.platforms && game.platforms.length > 0 && (
-            <div className="game-badges">
-              {game.platforms.map((plat) => (
-                <span key={plat.platform.id} className="badge platform">
-                  {plat.platform.name}
-                </span>
-              ))}
-            </div>
-          )}
+          <h1>{game.title}</h1>
+          {game.releaseDate && <p className="release-date">Released: {game.releaseDate}</p>}
+          <div className="game-badges">
+            {game.genre && <span className="badge genre">{game.genre}</span>}
+            {game.platform && <span className="badge platform">{game.platform}</span>}
+          </div>
         </div>
       </section>
 
       <section className="game-description-section">
         <h2 className="section-title">Description</h2>
-        <div className="game-description" dangerouslySetInnerHTML={{ __html: game.description || game.description_raw || "No description available." }}></div>
-        <button onClick={handleAddToLibrary} className="pill-button primary">
+        <div className="game-description">{game.shortDescription || "No description available."}</div>
+        <button onClick={handleAddToLibrary} className="pill-button primary" disabled={!user}>
           Add to Library
         </button>
         {error && <p className="error-message">{error}</p>}
