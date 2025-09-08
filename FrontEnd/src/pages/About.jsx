@@ -6,53 +6,34 @@ function About() {
     <div className="page-container about-page">
       <h1>About Virtuo</h1>
       <p>
-        Virtuo is your ultimate platform to explore, discover, and manage video games. Whether you're a casual player or a hardcore gamer, our mission is to
-        help you find your favorites, track upcoming releases, and stay connected with the gaming world.
+        Virtuo is your platform to discover, explore, and manage your favorite video games. Whether you're a casual player or a passionate gamer, our goal is to
+        help you find new titles and organize your personal collection.
       </p>
 
       <p>
-        Our platform is powered by the{" "}
-        <a href="https://rawg.io/apidocs" target="_blank" rel="noopener noreferrer">
-          RAWG Video Games Database API
-        </a>
-        , giving you access to thousands of games with detailed information, release dates, ratings, screenshots, and more.
+        Our site uses the{" "}
+        <a href="https://www.freetogame.com/api-doc" target="_blank" rel="noopener noreferrer">
+          Free To Game API
+        </a>{" "}
+        to give you access to a wide range of free games, with detailed information on genres, platforms, release dates, and more.
       </p>
 
       <p>
-        Virtuo allows you to:
+        With Virtuo, you can:
         <ul>
-          <li>Browse detailed game pages and view key information like genre, platforms, and release date.</li>
-          <li>Keep track of your favorite games and upcoming releases.</li>
-          <li>Read community reviews and share your own gaming experiences.</li>
-          <li>
-            Access helpful resources like{" "}
-            <a href="https://www.ign.com/" target="_blank" rel="noopener noreferrer">
-              IGN
-            </a>{" "}
-            and{" "}
-            <a href="https://www.metacritic.com/" target="_blank" rel="noopener noreferrer">
-              Metacritic
-            </a>{" "}
-            for news and reviews.
-          </li>
+          <li>Explore games and view all the main information about each title.</li>
+          <li>Add games to your personal library to keep track of your favorites.</li>
+          <li>Chat and discuss games with other users in the community.</li>
         </ul>
       </p>
 
       <p>
-        Join our community and level up your gaming experience! Whether you’re here to discover new titles, track your collections, or simply explore, Virtuo is
-        the hub for gamers who want to stay ahead of the curve.
+        Join our community and level up your gaming experience! Whether you want to discover new titles, manage your collection, or just talk about games with
+        fellow gamers, Virtuo is the right place for you.
       </p>
 
       <p>
-        Want to get in touch? Visit our <a href="/contact">Contact page</a> or follow us on{" "}
-        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-          Twitter
-        </a>{" "}
-        and{" "}
-        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-          Facebook
-        </a>
-        .
+        Want to get in touch or follow us? Visit our <a href="/contact">Contact page</a>.
       </p>
     </div>
   );

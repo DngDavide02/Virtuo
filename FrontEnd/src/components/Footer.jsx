@@ -15,15 +15,12 @@ function Footer() {
           <div className="footer-section">
             <h4>Company</h4>
             <Link to="/about">About Us</Link>
-            <Link to="/careers">Careers</Link>
             <Link to="/contact">Contact</Link>
           </div>
 
           <div className="footer-section">
             <h4>Resources</h4>
-            <Link to="/blog">Blog</Link>
             <Link to="/help">Help Center</Link>
-            <Link to="/privacy">Privacy Policy</Link>
           </div>
 
           <div className="footer-section">
