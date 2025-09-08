@@ -76,6 +76,9 @@ export default function NavigationBar() {
               <Nav.Link as={Link} to="/games" className={`nav-link-minimal ${isActive("/games")}`}>
                 Games
               </Nav.Link>
+              <Nav.Link as={Link} to="/chat" className={`nav-link-minimal ${isActive("/chat")}`}>
+                Chat
+              </Nav.Link>
               <NavDropdown
                 title={<span className="nav-link-minimal">More</span>}
                 id="more-dropdown"
