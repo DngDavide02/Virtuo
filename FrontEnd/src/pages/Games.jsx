@@ -1,109 +1,56 @@
 import React, { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
+import axiosInstance from "../js/axiosInstance";
 import "../css/home.css";
 
 function Games() {
   const [games, setGames] = useState([]);
-  const [_loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [genres, setGenres] = useState([]);
-  const [platforms, setPlatforms] = useState([]);
-  const [years, setYears] = useState([]);
-
-  const [selectedGenre, setSelectedGenre] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedPlatform, setSelectedPlatform] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
-  const [sortBy, setSortBy] = useState("relevance");
-  const [pageSize, setPageSize] = useState(12);
-  const [page, setPage] = useState(1);
+  const [sortBy, setSortBy] = useState("");
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const query = queryParams.get("search") || "";
 
-  const API_BASE = "http://localhost:3001/api/games/rawg";
+  const categories = ["mmorpg", "shooter", "moba", "racing", "sports", "social", "sandbox", "open-world"];
+  const platforms = ["pc", "browser"];
 
-  // Genera lista anni dal 1980 al 2025
-  useEffect(() => {
-    const allYears = [];
-    for (let y = 2025; y >= 1980; y--) {
-      allYears.push(y);
-    }
-    setYears(allYears);
-  }, []);
-
-  // Fetch generi e piattaforme
-  useEffect(() => {
-    const fetchFilters = async () => {
-      try {
-        const [genresRes, platformsRes] = await Promise.all([
-          axios.get("http://localhost:3001/api/games/genres"),
-          axios.get("http://localhost:3001/api/games/platforms"),
-        ]);
-        setGenres(genresRes.data || []);
-        setPlatforms(platformsRes.data || []);
-      } catch (err) {
-        console.error("Errore fetch filtri:", err);
-      }
-    };
-    fetchFilters();
-  }, []);
-
-  // Fetch giochi con filtri
   useEffect(() => {
     const fetchGames = async () => {
       try {
         setLoading(true);
-        const params = new URLSearchParams({
-          page: 1,
-          page_size: 100,
-        });
-        if (query) params.append("search", query);
-        if (selectedGenre) params.append("genres", selectedGenre);
-        if (selectedPlatform) params.append("platforms", selectedPlatform);
-        if (selectedYear) params.append("year", selectedYear);
 
-        const res = await axios.get(`${API_BASE}/filter?${params.toString()}`);
-        const gamesData = res.data || [];
-        setGames(gamesData);
+        let res;
+        if (query) {
+          res = await axiosInstance.get("/games/search", { params: { q: query } });
+        } else {
+          const params = {
+            category: selectedCategory || undefined,
+            platform: selectedPlatform || undefined,
+            sortBy: sortBy || undefined,
+          };
+          res = await axiosInstance.get("/games", { params });
+        }
+
+        setGames(res.data || []);
       } catch (err) {
         console.error("Errore fetch giochi:", err);
       } finally {
         setLoading(false);
       }
     };
+
     fetchGames();
-  }, [query, selectedGenre, selectedPlatform, selectedYear]);
+  }, [query, selectedCategory, selectedPlatform, sortBy]);
 
-  const filteredAndSorted = useMemo(() => {
-    let list = [...games];
-    switch (sortBy) {
-      case "name-asc":
-        list.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-        break;
-      case "name-desc":
-        list.sort((a, b) => (b.name || "").localeCompare(a.name || ""));
-        break;
-      case "rating-desc":
-        list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-        break;
-      case "released-desc":
-        list.sort((a, b) => new Date(b.released || 0) - new Date(a.released || 0));
-        break;
-      case "released-asc":
-        list.sort((a, b) => new Date(a.released || 0) - new Date(b.released || 0));
-        break;
-      default:
-        break;
-    }
-    return list;
-  }, [games, sortBy]);
+  const filteredAndSorted = useMemo(() => [...games], [games]);
 
-  const paginated = useMemo(() => filteredAndSorted.slice(0, page * pageSize), [filteredAndSorted, page, pageSize]);
-  const hasMore = paginated.length < filteredAndSorted.length;
+  const getImage = (game) => game.thumbnail || "/img/default-game.jpg";
 
-  const getImage = (game) => game.background_image || "/img/default-game.jpg";
+  if (loading) return <div className="loading">Loading games...</div>;
 
   return (
     <div className="container">
@@ -114,25 +61,16 @@ function Games() {
           </h3>
 
           <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="all-games-dropdown">
-            <option value="relevance">Relevance</option>
-            <option value="name-asc">Name A–Z</option>
-            <option value="name-desc">Name Z–A</option>
-            <option value="rating-desc">Rating (High → Low)</option>
-            <option value="released-desc">Newest</option>
-            <option value="released-asc">Oldest</option>
+            <option value="">Default</option>
+            <option value="alphabetical">Alphabetical</option>
+            <option value="release-date">Release Date</option>
           </select>
 
-          <select value={pageSize} onChange={(e) => setPageSize(Number(e.target.value))} className="all-games-dropdown">
-            <option value={8}>8</option>
-            <option value={12}>12</option>
-            <option value={24}>24</option>
-          </select>
-
-          <select value={selectedGenre} onChange={(e) => setSelectedGenre(e.target.value)} className="all-games-dropdown">
-            <option value="">All Genres</option>
-            {genres.map((g) => (
-              <option key={g.id} value={g.slug}>
-                {g.name}
+          <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="all-games-dropdown">
+            <option value="">All Categories</option>
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {c}
               </option>
             ))}
           </select>
@@ -140,33 +78,22 @@ function Games() {
           <select value={selectedPlatform} onChange={(e) => setSelectedPlatform(e.target.value)} className="all-games-dropdown">
             <option value="">All Platforms</option>
             {platforms.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
-
-          <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} className="all-games-dropdown">
-            <option value="">All Years</option>
-            {years.map((y) => (
-              <option key={y} value={y}>
-                {y}
+              <option key={p} value={p}>
+                {p}
               </option>
             ))}
           </select>
         </div>
 
-        <div style={{ marginBottom: 10, color: "var(--muted)", fontSize: 13 }}>
-          {filteredAndSorted.length} results · Showing {paginated.length} of {filteredAndSorted.length}
-        </div>
+        <div style={{ marginBottom: 10, color: "var(--muted)", fontSize: 13 }}>{filteredAndSorted.length} results</div>
 
         <div className="all-games-grid">
-          {paginated.map((game) => (
+          {filteredAndSorted.map((game) => (
             <div className="game-card large" key={game.id}>
               <div className="game-image-wrapper">
-                <img src={getImage(game)} alt={game.name} loading="lazy" />
+                <img src={getImage(game)} alt={game.title} loading="lazy" />
                 <div className="card-overlay">
-                  <h4>{game.name}</h4>
+                  <h4>{game.title}</h4>
                   <div className="card-buttons">
                     <Link to={`/games/${game.id}`} className="pill-button small no-link">
                       View Details
@@ -176,31 +103,13 @@ function Games() {
               </div>
               <div className="game-footer">
                 <div style={{ display: "flex", flexDirection: "column" }}>
-                  <span style={{ fontWeight: 700, fontSize: 13, color: "white" }}>{game.name}</span>
-                  <span style={{ fontSize: 12, color: "var(--muted)" }}>{game.released ?? "TBA"}</span>
+                  <span style={{ fontWeight: 700, fontSize: 13, color: "white" }}>{game.title}</span>
+                  <span style={{ fontSize: 12, color: "var(--muted)" }}>{game.release_date ?? "TBA"}</span>
                 </div>
                 <div className="rating">{(game.rating || 0).toFixed(1)}</div>
               </div>
             </div>
           ))}
-        </div>
-
-        <div style={{ display: "flex", justifyContent: "center", marginTop: 18, gap: 12 }}>
-          {hasMore ? (
-            <button onClick={() => setPage((p) => p + 1)} className="pill-button primary">
-              Load more
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                setPage(1);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              className="pill-button secondary"
-            >
-              Reset
-            </button>
-          )}
         </div>
       </section>
     </div>
