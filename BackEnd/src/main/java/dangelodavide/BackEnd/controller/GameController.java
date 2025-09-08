@@ -17,23 +17,22 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/free")
-    public ResponseEntity<List<Game>> getFreeGames() {
-        List<Game> freeGames = gameService.getFreeGames();
-        return ResponseEntity.ok(freeGames);
-    }
-
     @GetMapping
-    public ResponseEntity<List<Game>> getAllGames() {
-        List<Game> games = gameService.getAllGames();
-        return ResponseEntity.ok(games);
+    public ResponseEntity<List<Game>> getFreeGames(
+            @RequestParam(required = false) String platform,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String sortBy
+    ) {
+        return ResponseEntity.ok(gameService.getFreeGames(platform, category, sortBy));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Game> getGameById(@PathVariable Long id) {
-        return gameService.getGameById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Game> getGameById(@PathVariable Integer id) {
+        return ResponseEntity.ok(gameService.getGameDetails(id));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Game>> searchGames(@RequestParam String q) {
+        return ResponseEntity.ok(gameService.searchGames(q));
+    }
 }
