@@ -1,95 +1,274 @@
-.game-hero-section {
+/* gameDetails.css - stile isolato per GameDetails
+   Non contiene regole globali che possano interferire con altre pagine.
+   Si appoggia alle variabili già presenti in home.css (fallback inclusi).
+*/
+
+:root {
+  /* fallback (usate solo se non definite globalmente) */
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --orange-bright: #ff7304;
+  --orange-dark: #d2752b;
+  --brown: #a57752;
+  --text-light: #f2f2f2;
+  --muted: #a0a0a0;
+  --glass: rgba(255, 255, 255, 0.03);
+  --card-shadow: 0 8px 30px rgba(2, 2, 2, 0.7);
+}
+
+/* Container principale (scope locale) */
+.game-details-container {
+  max-width: var(--container-w, 1200px);
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  box-sizing: border-box;
+  color: var(--text-light);
+}
+
+/* HERO */
+.game-details-container .game-hero-section {
   position: relative;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
   box-shadow: var(--card-shadow);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.6));
 }
 
-.game-hero-image {
-  position: relative;
-  height: 500px;
+.game-details-container .game-hero-image {
+  height: clamp(300px, 42vh, 520px);
   background-size: cover;
   background-position: center;
+  transition: transform 420ms cubic-bezier(0.2, 0.9, 0.3, 1);
+  will-change: transform;
 }
 
-.game-hero-overlay {
+/* leggera scala al passaggio del mouse (solo se hover disponibile) */
+@media (hover: hover) {
+  .game-details-container .game-hero-section:hover .game-hero-image {
+    transform: scale(1.02);
+  }
+}
+
+.game-details-container .game-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.72));
+  pointer-events: none;
 }
 
-.game-hero-content {
+.game-details-container .game-hero-content {
   position: absolute;
-  bottom: 2rem;
-  left: 2rem;
-  z-index: 2;
-  color: #fff;
+  bottom: clamp(14px, 4vh, 36px);
+  left: clamp(14px, 3vw, 36px);
+  z-index: 3;
+  color: var(--text-light);
+  max-width: 70%;
+  text-shadow: 0 6px 18px rgba(0, 0, 0, 0.65);
 }
 
-.game-hero-content h1 {
-  font-size: clamp(2rem, 3vw, 3rem);
+.game-details-container .game-hero-content h1 {
   margin: 0 0 0.5rem 0;
-  text-shadow: 0 6px 22px rgba(0, 0, 0, 0.8);
+  font-size: clamp(1.8rem, 3.8vw, 3rem);
+  font-weight: 700;
+  color: var(--orange-bright);
+  letter-spacing: -0.02em;
+  line-height: 1.03;
 }
 
-.release-date {
-  font-size: 0.9rem;
-  color: var(--muted);
-  margin-bottom: 1rem;
-}
-
-.game-badges {
+/* badges (genre + platform) */
+.game-details-container .game-badges {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 
-.badge {
-  padding: 0.35rem 0.8rem;
+.game-details-container .badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.85rem;
   border-radius: 999px;
-  font-size: 0.85rem;
   font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  font-size: 0.85rem;
+  background: var(--glass);
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-.genre {
-  background: linear-gradient(90deg, var(--brown), var(--orange-bright));
-  color: #fff;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+.game-details-container .badge.genre {
+  background-color: var(--orange-bright);
+  color: #0b0b0b;
+  border: none;
 }
 
-.platform {
-  background: rgba(255, 255, 255, 0.05);
+.game-details-container .badge.platform {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
   color: var(--text-light);
 }
 
-.game-description-section {
-  margin-bottom: 2rem;
+/* DESCRIPTION CARD */
+.game-details-container .game-description-section {
+  margin: 1.4rem 0;
+  padding: 1.2rem;
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.012), rgba(255, 255, 255, 0.01));
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
-.section-title {
-  font-size: 1rem;
-  font-weight: 600;
+.game-details-container .section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
   color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: 1.8px;
+  letter-spacing: 1.6px;
   margin: 0 0 1rem 0;
-  position: relative;
+  display: inline-flex;
+  align-items: center;
 }
 
-.section-title::after {
+.game-details-container .section-title::after {
   content: "";
   display: inline-block;
-  width: 48px;
+  width: 44px;
   height: 2px;
   background: linear-gradient(90deg, var(--brown), var(--orange-bright));
-  margin-left: 12px;
-  vertical-align: middle;
+  margin-left: 10px;
   border-radius: 2px;
 }
 
-.game-description-section p {
-  line-height: 1.6;
+.game-details-container .game-description {
   color: var(--text-light);
+  line-height: 1.7;
+  font-size: 1rem;
+  white-space: pre-wrap;
+}
+
+/* CTA: usa selector locale per non interferire con .pill-button globale se presente */
+.game-details-container .cta-row {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* pulsante primario locale (più specifico, non tocca regole globali) */
+.game-details-container .pill-button.primary {
+  padding: 0.72rem 1.35rem;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(180deg, var(--orange-bright), var(--orange-dark));
+  color: #0b0b0b;
+  border: none;
+  box-shadow: 0 10px 30px rgba(255, 115, 4, 0.08), 0 4px 12px rgba(0, 0, 0, 0.6);
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+/* hover/active - solo se hover disponibile */
+@media (hover: hover) {
+  .game-details-container .pill-button.primary:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(255, 115, 4, 0.12);
+  }
+}
+
+/* assicurati che il focus non crei contorni extra: niente cambio globale qui,
+   se vuoi il focus locale, usa un'ombra discreta */
+.game-details-container .pill-button.primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 115, 4, 0.1);
+}
+
+/* disabled */
+.game-details-container .pill-button.primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* INFO GRID */
+.game-details-container .game-info-section {
+  margin-top: 1.25rem;
+  padding: 1.2rem;
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.01));
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.game-details-container .game-info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1.2rem;
+}
+
+.game-details-container .game-info-list li {
+  color: var(--text-light);
+  font-size: 0.95rem;
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+}
+
+.game-details-container .game-info-list li strong {
+  min-width: 92px;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* inline links */
+.game-details-container .game-info-list a {
+  color: var(--orange-bright);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.game-details-container .game-info-list a:hover {
+  text-decoration: underline;
+}
+
+/* small utilities locale */
+.game-details-container .error-message {
+  color: #ff7b7b;
+  margin-top: 0.6rem;
+  font-weight: 600;
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .game-details-container .game-hero-content {
+    max-width: 86%;
+    left: 16px;
+    bottom: 18px;
+  }
+  .game-details-container .game-info-list {
+    grid-template-columns: 1fr;
+  }
+  .game-details-container .game-hero-image {
+    height: clamp(220px, 36vh, 380px);
+  }
+}
+
+/* entrance animation (respect user preference) */
+@media (prefers-reduced-motion: no-preference) {
+  .game-details-container {
+    animation: gd-fadeIn 0.42s ease;
+  }
+  @keyframes gd-fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }

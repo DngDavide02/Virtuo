@@ -63,7 +63,7 @@ export default function GameDetails() {
         ></div>
         <div className="game-hero-overlay"></div>
         <div className="game-hero-content">
-          <h1>{game.title}</h1>
+          <h1 className="text-white">{game.title}</h1>
           <div className="game-badges">
             {game.genre && <span className="badge genre">{game.genre}</span>}
             {game.platform && <span className="badge platform">{game.platform}</span>}
@@ -73,7 +73,7 @@ export default function GameDetails() {
 
       <section className="game-description-section">
         <h2 className="section-title">Description</h2>
-        <div className="game-description">{game.short_description || "No description available."}</div>
+        <div className="game-description mb-3">{game.short_description || "No description available."}</div>
         <button onClick={handleAddToLibrary} className="pill-button primary" disabled={!user}>
           Add to Library
         </button>
