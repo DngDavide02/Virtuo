@@ -10,6 +10,8 @@ function Games() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedPlatform, setSelectedPlatform] = useState("");
   const [sortBy, setSortBy] = useState("");
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(12);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -22,31 +24,56 @@ function Games() {
     const fetchGames = async () => {
       try {
         setLoading(true);
-
         let res;
         if (query) {
           res = await axiosInstance.get("/games/search", { params: { q: query } });
         } else {
-          const params = {
-            category: selectedCategory || undefined,
-            platform: selectedPlatform || undefined,
-            sortBy: sortBy || undefined,
-          };
-          res = await axiosInstance.get("/games", { params });
+          res = await axiosInstance.get("/games");
         }
-
         setGames(res.data || []);
       } catch (err) {
         console.error("Errore fetch giochi:", err);
       } finally {
         setLoading(false);
+        setPage(1);
       }
     };
-
     fetchGames();
-  }, [query, selectedCategory, selectedPlatform, sortBy]);
+  }, [query]);
 
-  const filteredAndSorted = useMemo(() => [...games], [games]);
+  const filteredAndSorted = useMemo(() => {
+    let list = [...games];
+
+    // Filtro categoria
+    if (selectedCategory) {
+      list = list.filter((g) => g.genre?.toLowerCase().includes(selectedCategory.toLowerCase()));
+    }
+
+    // Filtro piattaforma
+    if (selectedPlatform) {
+      list = list.filter((g) => {
+        if (!g.platform) return false;
+        return g.platform.toLowerCase().includes(selectedPlatform.toLowerCase());
+      });
+    }
+
+    // Ordinamento
+    switch (sortBy) {
+      case "alphabetical":
+        list.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case "release-date":
+        list.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+        break;
+      default:
+        break;
+    }
+
+    return list;
+  }, [games, selectedCategory, selectedPlatform, sortBy]);
+
+  const paginated = useMemo(() => filteredAndSorted.slice(0, page * pageSize), [filteredAndSorted, page, pageSize]);
+  const hasMore = paginated.length < filteredAndSorted.length;
 
   const getImage = (game) => game.thumbnail || "/img/default-game.jpg";
 
@@ -60,13 +87,27 @@ function Games() {
             All Games
           </h3>
 
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="all-games-dropdown">
+          <select
+            value={sortBy}
+            onChange={(e) => {
+              setSortBy(e.target.value);
+              setPage(1);
+            }}
+            className="all-games-dropdown"
+          >
             <option value="">Default</option>
             <option value="alphabetical">Alphabetical</option>
             <option value="release-date">Release Date</option>
           </select>
 
-          <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="all-games-dropdown">
+          <select
+            value={selectedCategory}
+            onChange={(e) => {
+              setSelectedCategory(e.target.value);
+              setPage(1);
+            }}
+            className="all-games-dropdown"
+          >
             <option value="">All Categories</option>
             {categories.map((c) => (
               <option key={c} value={c}>
@@ -75,7 +116,14 @@ function Games() {
             ))}
           </select>
 
-          <select value={selectedPlatform} onChange={(e) => setSelectedPlatform(e.target.value)} className="all-games-dropdown">
+          <select
+            value={selectedPlatform}
+            onChange={(e) => {
+              setSelectedPlatform(e.target.value);
+              setPage(1);
+            }}
+            className="all-games-dropdown"
+          >
             <option value="">All Platforms</option>
             {platforms.map((p) => (
               <option key={p} value={p}>
@@ -88,7 +136,7 @@ function Games() {
         <div style={{ marginBottom: 10, color: "var(--muted)", fontSize: 13 }}>{filteredAndSorted.length} results</div>
 
         <div className="all-games-grid">
-          {filteredAndSorted.map((game) => (
+          {paginated.map((game) => (
             <div className="game-card large" key={game.id}>
               <div className="game-image-wrapper">
                 <img src={getImage(game)} alt={game.title} loading="lazy" />
@@ -110,6 +158,18 @@ function Games() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "center", marginTop: 18, gap: 12 }}>
+          {hasMore ? (
+            <button onClick={() => setPage((p) => p + 1)} className="pill-button primary">
+              Load More
+            </button>
+          ) : (
+            <button onClick={() => setPage(1)} className="pill-button secondary">
+              Reset
+            </button>
+          )}
         </div>
       </section>
     </div>
