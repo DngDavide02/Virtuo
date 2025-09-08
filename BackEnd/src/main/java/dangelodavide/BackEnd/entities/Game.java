@@ -1,5 +1,6 @@
 package dangelodavide.BackEnd.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,6 +18,7 @@ public class Game {
     private String thumbnail;
 
     @Column(name = "short_description")
+    @JsonProperty("short_description")
     private String shortDescription;
 
     private String game_url;
