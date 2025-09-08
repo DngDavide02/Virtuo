@@ -14,7 +14,6 @@ import { Navigation, Pagination, Autoplay } from "swiper";
 function Home() {
   const [carouselGames, setCarouselGames] = useState([]);
   const [topGames, setTopGames] = useState([]);
-  const [upcomingGames, setUpcomingGames] = useState([]);
   const [allGames, setAllGames] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,7 +32,6 @@ function Home() {
 
         setCarouselGames(games.slice(0, 15));
         setTopGames([...games].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 12));
-        setUpcomingGames(games.filter((g) => new Date(g.release_date) > new Date()).slice(0, 12));
         setAllGames(games);
       } catch (err) {
         console.error("Error fetching games:", err);
@@ -142,11 +140,6 @@ function Home() {
       <section className="games-section top-rated fade-in">
         <h3 className="section-title">Top Rated</h3>
         <div className="games-grid">{topGames.map(renderGameCard)}</div>
-      </section>
-
-      <section className="games-section upcoming fade-in">
-        <h3 className="section-title">Coming Soon</h3>
-        <div className="games-grid">{upcomingGames.map(renderGameCard)}</div>
       </section>
 
       <section className="games-section all-games fade-in">
