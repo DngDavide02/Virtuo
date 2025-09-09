@@ -1,40 +1,49 @@
-import axiosInstance from "../js/axiosInstance";
 import { useEffect, useState, useRef } from "react";
+import axiosInstance from "../js/axiosInstance";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
-  const currentUser = localStorage.getItem("username");
+  const currentUser = localStorage.getItem("username") || "Player";
 
-  const fetchMessages = async () => {
-    try {
-      const res = await axiosInstance.get("/chat/messages");
-      setMessages(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const sessionId = "mock-session-1";
 
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
+    const userMsg = {
+      senderUsername: currentUser,
+      content: newMessage,
+      timestamp: new Date().toISOString(),
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
+    setNewMessage("");
+
     try {
-      const res = await axiosInstance.post("/chat/send", {
-        senderUsername: currentUser,
-        content: newMessage,
+      const res = await axiosInstance.post(`/ai-chat/send?sessionId=${sessionId}`, {
+        message: newMessage,
       });
-      setMessages((prev) => [...prev, res.data]);
-      setNewMessage("");
+
+      const aiMsg = {
+        senderUsername: "AI",
+        content: res.data.response,
+        timestamp: new Date().toISOString(),
+      };
+
+      setMessages((prev) => [...prev, aiMsg]);
     } catch (err) {
-      console.error(err);
+      console.error("Errore nella chat AI:", err);
+      const errorMsg = {
+        senderUsername: "AI",
+        content: "Mi dispiace, non riesco a rispondere al momento.",
+        timestamp: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, errorMsg]);
     }
   };
-
-  useEffect(() => {
-    fetchMessages();
-  }, []);
 
   useEffect(() => {
     if (messagesEndRef.current) {

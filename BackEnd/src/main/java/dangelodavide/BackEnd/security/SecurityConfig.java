@@ -35,7 +35,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/games/**").permitAll() // libero per test
+                        .requestMatchers("/api/games/**").permitAll()
+                        .requestMatchers("/api/ai-chat/**").permitAll() // 👈 aggiungi questa linea
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/library/**").hasRole("USER")
                         .anyRequest().authenticated()
@@ -46,6 +47,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
