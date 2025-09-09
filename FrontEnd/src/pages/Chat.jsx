@@ -1,12 +1,10 @@
-import { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import axiosInstance from "../js/axiosInstance";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const messagesEndRef = useRef(null);
   const currentUser = localStorage.getItem("username") || "Player";
-
   const sessionId = "mock-session-1";
 
   const sendMessage = async (e) => {
@@ -19,7 +17,6 @@ export default function Chat() {
       timestamp: new Date().toISOString(),
     };
 
-    setMessages((prev) => [...prev, userMsg]);
     setNewMessage("");
 
     try {
@@ -33,7 +30,7 @@ export default function Chat() {
         timestamp: new Date().toISOString(),
       };
 
-      setMessages((prev) => [...prev, aiMsg]);
+      setMessages((prev) => [...prev, userMsg, aiMsg]);
     } catch (err) {
       console.error("Errore nella chat AI:", err);
       const errorMsg = {
@@ -41,15 +38,9 @@ export default function Chat() {
         content: "Mi dispiace, non riesco a rispondere al momento.",
         timestamp: new Date().toISOString(),
       };
-      setMessages((prev) => [...prev, errorMsg]);
+      setMessages((prev) => [...prev, userMsg, errorMsg]);
     }
   };
-
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
 
   return (
     <div className="chat-page">
@@ -60,10 +51,9 @@ export default function Chat() {
             <div className="chat-meta">{new Date(msg.timestamp).toLocaleTimeString()}</div>
           </div>
         ))}
-        <div ref={messagesEndRef} />
       </div>
 
-      <form className="chat-input-bar sticky" onSubmit={sendMessage}>
+      <form className="chat-input-bar" onSubmit={sendMessage}>
         <input className="chat-input" type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)} placeholder="Scrivi un messaggio..." />
         <button type="submit" className="chat-send-btn">
           →
