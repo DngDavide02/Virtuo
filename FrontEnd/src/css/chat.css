@@ -4,6 +4,19 @@
   height: 100vh;
   background: var(--surface);
   color: var(--text-light);
+  position: relative;
+}
+
+.chat-intro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  pointer-events: none;
 }
 
 .chat-messages {
@@ -15,7 +28,7 @@
 }
 
 .chat-bubble {
-  max-width: 15%; /* larghezza piccola */
+  max-width: 25%;
   margin-bottom: 15px;
   padding: 6px 15px;
   border-radius: 12px;
@@ -23,6 +36,13 @@
   box-shadow: var(--card-shadow);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   font-size: 0.95rem;
+}
+
+.chat-username {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  font-weight: 600;
+  margin-bottom: 3px;
 }
 
 .chat-bubble.own {
