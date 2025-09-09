@@ -1,13 +1,15 @@
 import axiosInstance from "../js/axiosInstance";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const messagesEndRef = useRef(null);
+  const currentUser = localStorage.getItem("username");
 
   const fetchMessages = async () => {
     try {
-      const res = await axiosInstance.get("/chat/messages"); // ✅ corretto
+      const res = await axiosInstance.get("/chat/messages");
       setMessages(res.data);
     } catch (err) {
       console.error(err);
@@ -20,7 +22,7 @@ export default function Chat() {
 
     try {
       const res = await axiosInstance.post("/chat/send", {
-        senderUsername: localStorage.getItem("username"), // prende username salvato
+        senderUsername: currentUser,
         content: newMessage,
       });
       setMessages((prev) => [...prev, res.data]);
@@ -34,53 +36,28 @@ export default function Chat() {
     fetchMessages();
   }, []);
 
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   return (
-    <div style={{ padding: "20px", color: "white" }}>
-      <h2>Chat</h2>
-      <div
-        style={{
-          maxHeight: "400px",
-          overflowY: "auto",
-          border: "1px solid #444",
-          padding: "10px",
-          marginBottom: "15px",
-        }}
-      >
+    <div className="chat-page">
+      <div className="chat-messages">
         {messages.map((msg, idx) => (
-          <div key={idx} style={{ marginBottom: "10px" }}>
-            <strong>{msg.senderUsername}: </strong>
-            {msg.content} <em style={{ fontSize: "0.8em" }}>({msg.timestamp})</em>
+          <div key={idx} className={`chat-bubble ${msg.senderUsername === currentUser ? "own" : "other"}`}>
+            <div className="chat-text">{msg.content}</div>
+            <div className="chat-meta">{new Date(msg.timestamp).toLocaleTimeString()}</div>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={sendMessage} style={{ display: "flex", gap: "10px" }}>
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Scrivi un messaggio..."
-          style={{
-            flex: 1,
-            padding: "8px",
-            borderRadius: "5px",
-            border: "1px solid #444",
-            background: "#222",
-            color: "white",
-          }}
-        />
-        <button
-          type="submit"
-          style={{
-            padding: "8px 15px",
-            borderRadius: "5px",
-            border: "none",
-            background: "#0d6efd",
-            color: "white",
-            cursor: "pointer",
-          }}
-        >
-          Invia
+      <form className="chat-input-bar sticky" onSubmit={sendMessage}>
+        <input className="chat-input" type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)} placeholder="Scrivi un messaggio..." />
+        <button type="submit" className="chat-send-btn">
+          →
         </button>
       </form>
     </div>
