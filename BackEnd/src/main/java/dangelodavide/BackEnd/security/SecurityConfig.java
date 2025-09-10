@@ -36,7 +36,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/games/**").permitAll()
-                        .requestMatchers("/api/ai-chat/**").permitAll() // 👈 aggiungi questa linea
+                        .requestMatchers("/api/ai-chat/**").permitAll() 
+                        .requestMatchers("/api/contacts/send").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/library/**").hasRole("USER")
                         .anyRequest().authenticated()

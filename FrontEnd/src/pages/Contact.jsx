@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "../css/contact.css";
 
 function Contact() {
@@ -7,16 +8,22 @@ function Contact() {
     email: "",
     message: "",
   });
+  const [status, setStatus] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    alert("Message sent! (mock implementation)");
-    setFormData({ name: "", email: "", message: "" });
+    try {
+      await axios.post("http://localhost:3001/api/contacts/send", formData);
+      setStatus("Message sent successfully!");
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setStatus("Failed to send message. Please try again later.");
+    }
   };
 
   return (
@@ -29,6 +36,7 @@ function Contact() {
           <textarea name="message" placeholder="Your Message" value={formData.message} onChange={handleChange} rows="5" required />
           <button type="submit">Send Message</button>
         </form>
+        {status && <p className="contact-status">{status}</p>}
       </div>
     </div>
   );
