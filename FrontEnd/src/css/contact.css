@@ -59,3 +59,28 @@
   transform: translateY(-2px) scale(1.01);
   box-shadow: 0 10px 24px rgba(255, 115, 4, 0.2);
 }
+
+/* Messaggio di stato */
+.contact-status {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* Successo */
+.contact-status.success {
+  background-color: #2d6a4f; /* verde scuro */
+  color: #d8f3dc; /* verde chiaro */
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
+}
+
+/* Errore */
+.contact-status.error {
+  background-color: #9d0208; /* rosso scuro */
+  color: #ffd6d6; /* rosso chiaro */
+  box-shadow: 0 4px 12px rgba(157, 2, 8, 0.3);
+}
