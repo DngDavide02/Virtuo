@@ -1,4 +1,4 @@
-package dangelodavide.BackEnd.services;
+package dangelodavide.BackEnd.service;
 
 import dangelodavide.BackEnd.entities.ContactMessage;
 import dangelodavide.BackEnd.payload.ContactMessageRequest;
@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -51,13 +53,13 @@ public class ContactMessageService {
         headers.setBasicAuth("api", apiKey);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        Map<String, String> body = new LinkedHashMap<>();
-        body.put("from", sender);
-        body.put("to", recipient);
-        body.put("subject", "Nuovo messaggio da " + msg.getName());
-        body.put("text", "Email: " + msg.getEmail() + "\n\nMessaggio:\n" + msg.getMessage());
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("from", sender);
+        body.add("to", recipient);
+        body.add("subject", "Nuovo messaggio da " + msg.getName());
+        body.add("text", "Email: " + msg.getEmail() + "\n\nMessaggio:\n" + msg.getMessage());
 
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);

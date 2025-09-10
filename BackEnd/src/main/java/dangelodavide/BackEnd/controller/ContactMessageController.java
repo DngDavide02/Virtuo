@@ -2,7 +2,7 @@ package dangelodavide.BackEnd.controller;
 
 import dangelodavide.BackEnd.entities.ContactMessage;
 import dangelodavide.BackEnd.payload.ContactMessageRequest;
-import dangelodavide.BackEnd.services.ContactMessageService;
+import dangelodavide.BackEnd.service.ContactMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
