@@ -6,18 +6,23 @@ import dangelodavide.BackEnd.entities.Library;
 import dangelodavide.BackEnd.entities.User;
 import dangelodavide.BackEnd.repository.GameRepository;
 import dangelodavide.BackEnd.repository.LibraryRepository;
+import dangelodavide.BackEnd.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class LibraryService {
 
     private final GameRepository gameRepository;
     private final LibraryRepository libraryRepository;
+    private final UserRepository userRepository;
 
-    public LibraryService(GameRepository gameRepository, LibraryRepository libraryRepository) {
+    public LibraryService(GameRepository gameRepository, LibraryRepository libraryRepository, UserRepository userRepository) {
         this.gameRepository = gameRepository;
         this.libraryRepository = libraryRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -50,4 +55,30 @@ public class LibraryService {
             library.addGame(game);
         }
     }
+
+    public List<GameDTO> getLibraryGamesByUser(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Library library = libraryRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Library not found"));
+
+        return library.getGames()
+                .stream()
+                .map(game -> new GameDTO(
+                        game.getId(),
+                        game.getTitle(),
+                        game.getThumbnail(),
+                        game.getShortDescription(),
+                        game.getGame_url(),
+                        game.getGenre(),
+                        game.getPlatform(),
+                        game.getPublisher(),
+                        game.getDeveloper(),
+                        game.getRelease_date(),
+                        game.getRating()
+                ))
+                .toList();
+    }
+
 }

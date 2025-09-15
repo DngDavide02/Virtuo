@@ -46,4 +46,20 @@ public class LibraryController {
 
         return ResponseEntity.ok("Game added to library");
     }
+
+    @GetMapping
+    public ResponseEntity<?> getUserLibrary(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        try {
+            var games = libraryService.getLibraryGamesByUser(userDetails.getUsername());
+            return ResponseEntity.ok(games);
+        } catch (Exception e) {
+            System.out.println("[DEBUG] Error fetching library: " + e.getMessage());
+            return ResponseEntity.status(500).body("Error fetching library");
+        }
+    }
+
 }

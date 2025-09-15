@@ -49,10 +49,11 @@ export default function Library() {
           games.map((game) => (
             <Col key={game.id} xs={12} md={6} lg={4} className="mb-3">
               <Card>
-                <Card.Img variant="top" src={game.background_image} />
+                <Card.Img variant="top" src={game.thumbnail} />
                 <Card.Body>
-                  <Card.Title>{game.name}</Card.Title>
-                  <Card.Text>Released: {game.released}</Card.Text>
+                  <Card.Title>{game.title}</Card.Title>
+                  <Card.Text>Released: {game.release_date}</Card.Text>
+                  <Card.Text>{game.shortDescription}</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
