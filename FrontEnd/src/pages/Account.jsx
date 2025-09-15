@@ -51,61 +51,85 @@ export default function Account() {
   if (!user) return <p>Loading...</p>;
 
   return (
-    <Container className="account-container">
-      <h2>Account</h2>
+    <Container className="account-container" role="main">
+      <div className="account-wrapper">
+        {/* LEFT: account panel */}
+        <aside className="account-panel" aria-label="Account info">
+          <div className="account-avatar" aria-hidden>
+            {user.username ? user.username.charAt(0).toUpperCase() : "U"}
+          </div>
+          <h2 className="account-name">{user.username}</h2>
+          <p className="account-role">{user.role}</p>
 
-      <div className="account-info">
-        <p>
-          <strong>Username:</strong> {user.username}
-        </p>
-        <p>
-          <strong>Role:</strong> {user.role}
-        </p>
-      </div>
+          <div className="account-info">
+            <p>
+              <strong>Username:</strong> {user.username}
+            </p>
+            <p>
+              <strong>Role:</strong> {user.role}
+            </p>
+          </div>
 
-      <div className="account-buttons">
-        {user.role === "ADMIN" && (
-          <Link to="/admin">
-            <Button variant="primary">Go to Admin Dashboard</Button>
-          </Link>
-        )}
-        <Button className="btn-logout" onClick={logout}>
-          Logout
-        </Button>
-      </div>
+          <div className="account-buttons">
+            {user.role === "ADMIN" && (
+              <Link to="/admin">
+                <Button variant="primary" className="btn-primary">
+                  Admin
+                </Button>
+              </Link>
+            )}
+            <Button variant="outline-light" className="btn-logout" onClick={logout}>
+              Logout
+            </Button>
+          </div>
+        </aside>
 
-      <h2 className="library-title" style={{ marginTop: "2rem" }}>
-        My Library
-      </h2>
-
-      {loading ? (
-        <div className="library-page-spinner">
-          <Spinner animation="border" />
-        </div>
-      ) : games.length === 0 ? (
-        <p className="library-empty">No games in your library.</p>
-      ) : (
-        <div className="library-grid">
-          {games.map((game) => (
-            <div key={game.id} className="library-card">
-              <div className="library-card-img">
-                <img src={game.thumbnail} alt={game.title} />
-              </div>
-              <div className="library-card-meta">
-                <h3 className="library-card-title">{game.title}</h3>
-                <div className="library-card-buttons">
-                  <button onClick={() => goToDetails(game.id)} className="btn-primary">
-                    View
-                  </button>
-                  <button onClick={() => removeGame(game.id)} className="btn-secondary">
-                    Remove
-                  </button>
-                </div>
-              </div>
+        {/* RIGHT: library content */}
+        <section className="account-content" aria-label="Library">
+          <div className="library-header">
+            <h3 className="library-title">My Library</h3>
+            <div className="library-meta">
+              <span className="library-count">
+                {games.length} item{games.length !== 1 ? "s" : ""}
+              </span>
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+
+          {loading ? (
+            <div className="library-page-spinner">
+              <Spinner animation="border" />
+            </div>
+          ) : games.length === 0 ? (
+            <p className="library-empty">No games in your library.</p>
+          ) : (
+            <div className="library-grid">
+              {games.map((game) => (
+                <article key={game.id} className="library-card" aria-labelledby={`game-${game.id}-title`}>
+                  <div className="library-card-img">
+                    <img src={game.thumbnail} alt={game.title} loading="lazy" />
+                  </div>
+                  <div className="library-card-meta">
+                    <h4 id={`game-${game.id}-title`} className="library-card-title" title={game.title}>
+                      {game.title}
+                    </h4>
+                    <div className="library-card-sub">
+                      <span className="library-card-release">{game.release_date}</span>
+                    </div>
+                    <div className="library-card-buttons">
+                      <button onClick={() => goToDetails(game.id)} className="card-cta">
+                        View
+                      </button>
+                      <button onClick={() => removeGame(game.id)} className="card-ghost">
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
     </Container>
   );
 }
