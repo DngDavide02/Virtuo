@@ -81,4 +81,20 @@ public class LibraryService {
                 .toList();
     }
 
+    @Transactional
+    public void removeGameFromLibrary(User user, Integer externalGameId) {
+        Library library = libraryRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Library not found"));
+
+        Game gameToRemove = library.getGames()
+                .stream()
+                .filter(g -> g.getId().equals(externalGameId))  // confronta con id esterno
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Game not found in user library"));
+
+        library.removeGame(gameToRemove);
+        libraryRepository.save(library);
+    }
+
+
 }

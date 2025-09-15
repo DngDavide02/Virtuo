@@ -62,4 +62,27 @@ public class LibraryController {
         }
     }
 
+    @DeleteMapping("/remove/{gameId}")
+    public ResponseEntity<?> removeGameFromLibrary(
+            @PathVariable Integer gameId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        if (userDetails == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        User user = userDetailsService.loadUserEntityByUsername(userDetails.getUsername());
+        if (user == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        try {
+            libraryService.removeGameFromLibrary(user, gameId);
+            return ResponseEntity.ok("Game removed from library");
+        } catch (Exception e) {
+            System.out.println("[DEBUG] Error removing game: " + e.getMessage());
+            return ResponseEntity.status(500).body("Error removing game");
+        }
+    }
+
 }
