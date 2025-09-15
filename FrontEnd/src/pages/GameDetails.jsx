@@ -8,15 +8,18 @@ export default function GameDetails() {
   const { id } = useParams();
   const [game, setGame] = useState(null);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const { user, addToLibrary } = useAuth();
 
   useEffect(() => {
     const fetchGame = async () => {
       try {
+        console.log("[DEBUG] Fetching game with id:", id);
         const res = await axiosInstance.get(`/games/${id}`);
+        console.log("[DEBUG] Game data fetched:", res.data);
         setGame(res.data);
       } catch (err) {
-        console.error("Error fetching game:", err);
+        console.error("[DEBUG] Error fetching game:", err);
         setError("Unable to fetch game data.");
       }
     };
@@ -25,27 +28,44 @@ export default function GameDetails() {
 
   const handleAddToLibrary = async () => {
     if (!user) {
+      console.warn("[DEBUG] User not logged in");
       setError("You must be logged in to add games to your library.");
       return;
     }
 
     try {
+      setError("");
+      setSuccess("");
+
+      console.log("[DEBUG] Current user:", user);
+      console.log("[DEBUG] JWT token:", user.token);
+
       const gameDTO = {
         id: game.id,
-        name: game.title,
-        description: game.short_description || "No description available.",
-        released: game.release_date,
-        backgroundImage: game.thumbnail,
+        title: game.title,
+        short_description: game.short_description || "No description available.",
+        release_date: game.release_date,
+        thumbnail: game.thumbnail,
+        game_url: game.game_url || "",
+        genre: game.genre || "",
+        platform: game.platform || "",
+        publisher: game.publisher || "",
+        developer: game.developer || "",
         rating: game.rating || 0,
       };
 
-      await axiosInstance.post(`/library/add`, gameDTO, {
+      console.log("[DEBUG] Sending gameDTO to backend:", gameDTO);
+
+      const response = await axiosInstance.post("/library/add", gameDTO, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
 
-      addToLibrary(gameDTO);
+      console.log("[DEBUG] Backend response:", response);
+
+      addToLibrary(game);
+      setSuccess("Game added to your library!");
     } catch (err) {
-      console.error("Error adding game to library:", err);
+      console.error("[DEBUG] Error adding game to library:", err.response || err);
       setError("Failed to add game to library.");
     }
   };
@@ -78,6 +98,7 @@ export default function GameDetails() {
           Add to Library
         </button>
         {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">{success}</p>}
       </section>
 
       <section className="game-info-section">
@@ -116,7 +137,7 @@ export default function GameDetails() {
           {game.game_url && (
             <li>
               <strong>Play:</strong>{" "}
-              <a href={game.game_url} target="_blank">
+              <a href={game.game_url} target="_blank" rel="noopener noreferrer">
                 Open Game
               </a>
             </li>
@@ -124,7 +145,7 @@ export default function GameDetails() {
           {game.freetogame_profile_url && (
             <li>
               <strong>Profile:</strong>{" "}
-              <a href={game.freetogame_profile_url} target="_blank">
+              <a href={game.freetogame_profile_url} target="_blank" rel="noopener noreferrer">
                 Freetogame Page
               </a>
             </li>

@@ -1,14 +1,13 @@
 package dangelodavide.BackEnd.security;
 
 import dangelodavide.BackEnd.entities.User;
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 import java.util.List;
 
-@Data
 public class UserDetailsImpl implements UserDetails {
 
     private final Long id;
@@ -16,10 +15,19 @@ public class UserDetailsImpl implements UserDetails {
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
 
+    public UserDetailsImpl(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
+        System.out.println("[DEBUG] UserDetailsImpl created: " + username + " | Authorities: " + authorities);
+    }
+
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = List.of(
                 new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
         );
+        System.out.println("[DEBUG] Building UserDetailsImpl for user: " + user.getUsername());
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),
@@ -28,6 +36,12 @@ public class UserDetailsImpl implements UserDetails {
         );
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() { return authorities; }
+    @Override
+    public String getPassword() { return password; }
+    @Override
+    public String getUsername() { return username; }
     @Override
     public boolean isAccountNonExpired() { return true; }
     @Override

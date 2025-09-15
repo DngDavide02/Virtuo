@@ -14,7 +14,10 @@ public class Game {
     private Long localId;
 
     private Integer id;
+
+    @Column(name = "name", nullable = false)
     private String title;
+
     private String thumbnail;
 
     @Column(name = "short_description")

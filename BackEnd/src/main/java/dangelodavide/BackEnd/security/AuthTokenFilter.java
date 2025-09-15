@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
@@ -36,7 +35,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             token = header.substring(7);
             try {
                 username = jwtUtils.getUsernameFromJwtToken(token);
-                System.out.println("[DEBUG] JWT username: " + username);
+                System.out.println("[DEBUG] JWT username extracted: " + username);
             } catch (Exception e) {
                 System.out.println("[DEBUG] Invalid JWT: " + e.getMessage());
             }
@@ -47,13 +46,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                System.out.println("[DEBUG] Loaded UserDetails: " + userDetails);
                 if (jwtUtils.validateJwtToken(token)) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities()
                     );
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     System.out.println("[DEBUG] Authenticated user: " + username);
+                    System.out.println("[DEBUG] Authorities: " + userDetails.getAuthorities());
                 } else {
                     System.out.println("[DEBUG] JWT validation failed");
                 }
