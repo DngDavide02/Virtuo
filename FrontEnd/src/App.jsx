@@ -11,7 +11,6 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Account from "./pages/Account";
 import GameDetails from "./pages/GameDetails";
-import Library from "./pages/Library";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Chat from "./pages/Chat";
@@ -48,14 +47,6 @@ function App() {
             element={
               <ProtectedRoute>
                 <Account />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/library"
-            element={
-              <ProtectedRoute>
-                <Library />
               </ProtectedRoute>
             }
           />
