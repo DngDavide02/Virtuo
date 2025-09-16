@@ -28,7 +28,6 @@ export default function GameDetails() {
 
   const handleAddToLibrary = async () => {
     if (!user) {
-      console.warn("[DEBUG] User not logged in");
       setError("You must be logged in to add games to your library.");
       return;
     }
@@ -37,16 +36,13 @@ export default function GameDetails() {
       setError("");
       setSuccess("");
 
-      console.log("[DEBUG] Current user:", user);
-      console.log("[DEBUG] JWT token:", user.token);
-
       const gameDTO = {
         id: game.id,
         title: game.title,
-        short_description: game.short_description || "No description available.",
-        release_date: game.release_date,
+        shortDescription: game.short_description || "No description available.",
+        releaseDate: game.release_date,
         thumbnail: game.thumbnail,
-        game_url: game.game_url || "",
+        gameUrl: game.game_url || "",
         genre: game.genre || "",
         platform: game.platform || "",
         publisher: game.publisher || "",
@@ -54,19 +50,28 @@ export default function GameDetails() {
         rating: game.rating || 0,
       };
 
-      console.log("[DEBUG] Sending gameDTO to backend:", gameDTO);
-
       const response = await axiosInstance.post("/library/add", gameDTO, {
         headers: { Authorization: `Bearer ${user.token}` },
+        validateStatus: () => true,
       });
 
-      console.log("[DEBUG] Backend response:", response);
-
-      addToLibrary(game);
-      setSuccess("Game added to your library!");
+      switch (response.status) {
+        case 200:
+          addToLibrary(game);
+          setSuccess("Game added to your library!");
+          break;
+        case 409:
+          setError("This game is already in your library.");
+          break;
+        case 401:
+          setError("You are not authorized. Please log in.");
+          break;
+        default:
+          setError("Failed to add game to library.");
+      }
     } catch (err) {
-      console.error("[DEBUG] Error adding game to library:", err.response || err);
-      setError("Failed to add game to library.");
+      console.error("[DEBUG] Unexpected error:", err);
+      setError("An unexpected error occurred.");
     }
   };
 

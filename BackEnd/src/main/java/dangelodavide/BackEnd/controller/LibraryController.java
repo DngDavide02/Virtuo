@@ -24,27 +24,25 @@ public class LibraryController {
     @PostMapping("/add")
     public ResponseEntity<?> addGameToLibrary(@RequestBody GameDTO gameDTO,
                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        System.out.println("[DEBUG] Controller /add called");
 
         if (userDetails == null) {
-            System.out.println("[DEBUG] UserDetails is null -> Unauthorized");
             return ResponseEntity.status(401).body("Unauthorized");
         }
 
-        System.out.println("[DEBUG] Authenticated user: " + userDetails.getUsername());
-
-        // Recupera l'entità User reale dal database tramite UserDetailsService
         User user = userDetailsService.loadUserEntityByUsername(userDetails.getUsername());
         if (user == null) {
-            System.out.println("[DEBUG] User entity not found -> Unauthorized");
             return ResponseEntity.status(401).body("Unauthorized");
         }
 
-        System.out.println("[DEBUG] Adding game: " + gameDTO.title());
-
-        libraryService.addGameToLibrary(user, gameDTO);
-
-        return ResponseEntity.ok("Game added to library");
+        try {
+            libraryService.addGameToLibrary(user, gameDTO);
+            return ResponseEntity.ok("Game added to library");
+        } catch (RuntimeException e) {
+            if (e.getMessage().equals("Game already in library")) {
+                return ResponseEntity.status(409).body("Game already in library");
+            }
+            return ResponseEntity.status(500).body("Error adding game");
+        }
     }
 
     @GetMapping
@@ -57,7 +55,6 @@ public class LibraryController {
             var games = libraryService.getLibraryGamesByUser(userDetails.getUsername());
             return ResponseEntity.ok(games);
         } catch (Exception e) {
-            System.out.println("[DEBUG] Error fetching library: " + e.getMessage());
             return ResponseEntity.status(500).body("Error fetching library");
         }
     }
@@ -80,7 +77,6 @@ public class LibraryController {
             libraryService.removeGameFromLibrary(user, gameId);
             return ResponseEntity.ok("Game removed from library");
         } catch (Exception e) {
-            System.out.println("[DEBUG] Error removing game: " + e.getMessage());
             return ResponseEntity.status(500).body("Error removing game");
         }
     }

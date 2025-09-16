@@ -51,9 +51,17 @@ public class LibraryService {
             return libraryRepository.save(newLib);
         });
 
-        if (!library.getGames().contains(game)) {
-            library.addGame(game);
+        // Controllo duplicati usando solo l'id esterno
+        boolean alreadyInLibrary = library.getGames()
+                .stream()
+                .anyMatch(g -> g.getId().equals(gameDTO.id()));
+
+        if (alreadyInLibrary) {
+            throw new RuntimeException("Game already in library");
         }
+
+        library.addGame(game);
+        libraryRepository.save(library);
     }
 
     public List<GameDTO> getLibraryGamesByUser(String username) {
@@ -88,13 +96,11 @@ public class LibraryService {
 
         Game gameToRemove = library.getGames()
                 .stream()
-                .filter(g -> g.getId().equals(externalGameId))  // confronta con id esterno
+                .filter(g -> g.getId().equals(externalGameId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Game not found in user library"));
 
         library.removeGame(gameToRemove);
         libraryRepository.save(library);
     }
-
-
 }
