@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Container, Button, Spinner } from "react-bootstrap";
 import { useAuth } from "../js/AuthContext";
 import axios from "axios";
@@ -11,6 +11,9 @@ export default function Account() {
   const { user, logout } = useAuth();
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [genreFilter, setGenreFilter] = useState("");
+  const [platformFilter, setPlatformFilter] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,7 +26,7 @@ export default function Account() {
         const res = await axios.get(API_BASE, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setGames(res.data);
+        setGames(res.data || []);
       } catch (err) {
         console.error("Error fetching library:", err);
       } finally {
@@ -48,12 +51,25 @@ export default function Account() {
     }
   };
 
+  // Filtraggio giochi
+  const filteredGames = useMemo(() => {
+    return games.filter((game) => {
+      const genreMatch = !genreFilter || (game.genre && game.genre.toLowerCase() === genreFilter.toLowerCase());
+      const platformMatch = !platformFilter || (game.platform && game.platform.toLowerCase() === platformFilter.toLowerCase());
+      return genreMatch && platformMatch;
+    });
+  }, [games, genreFilter, platformFilter]);
+
   if (!user) return <p>Loading...</p>;
+
+  // Estrai i valori unici dei filtri
+  const genres = Array.from(new Set(games.map((g) => g.genre).filter(Boolean)));
+  const platforms = Array.from(new Set(games.map((g) => g.platform).filter(Boolean)));
 
   return (
     <Container className="account-container" role="main">
       <div className="account-wrapper">
-        {/* LEFT: account panel */}
+        {/* PANEL */}
         <aside className="account-panel" aria-label="Account info">
           <div className="account-avatar" aria-hidden>
             {user.username ? user.username.charAt(0).toUpperCase() : "U"}
@@ -84,26 +100,47 @@ export default function Account() {
           </div>
         </aside>
 
-        {/* RIGHT: library content */}
+        {/* CONTENT */}
         <section className="account-content" aria-label="Library">
           <div className="library-header">
             <h3 className="library-title">My Library</h3>
             <div className="library-meta">
               <span className="library-count">
-                {games.length} item{games.length !== 1 ? "s" : ""}
+                {filteredGames.length} item{filteredGames.length !== 1 ? "s" : ""}
               </span>
             </div>
           </div>
 
+          {/* FILTRI */}
+          <div className="library-filters">
+            <select value={genreFilter} onChange={(e) => setGenreFilter(e.target.value)}>
+              <option value="">All Genres</option>
+              {genres.map((g) => (
+                <option key={g} value={g}>
+                  {g}
+                </option>
+              ))}
+            </select>
+            <select value={platformFilter} onChange={(e) => setPlatformFilter(e.target.value)}>
+              <option value="">All Platforms</option>
+              {platforms.map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* LOADING / EMPTY / GRID */}
           {loading ? (
             <div className="library-page-spinner">
               <Spinner animation="border" />
             </div>
-          ) : games.length === 0 ? (
-            <p className="library-empty">No games in your library.</p>
+          ) : filteredGames.length === 0 ? (
+            <p className="library-empty">No games match your filters.</p>
           ) : (
             <div className="library-grid">
-              {games.map((game) => (
+              {filteredGames.map((game) => (
                 <article key={game.id} className="library-card" aria-labelledby={`game-${game.id}-title`}>
                   <div className="library-card-img">
                     <img src={game.thumbnail} alt={game.title} loading="lazy" />
