@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/ai-chat/**").permitAll()
                         .requestMatchers("/api/contacts/send").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/library/**").hasRole("USER")
+                        .requestMatchers("/api/library/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
