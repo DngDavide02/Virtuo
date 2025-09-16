@@ -22,7 +22,6 @@ function Home() {
   const [pageSize] = useState(12);
   const [page, setPage] = useState(1);
 
-  // Carica giochi principali (carousel, top, upcoming)
   useEffect(() => {
     const fetchGames = async () => {
       try {
@@ -30,7 +29,9 @@ function Home() {
         const res = await axiosInstance.get("/games");
         const games = res.data || [];
 
-        setCarouselGames(games.slice(0, 15));
+        // Limitiamo carouselGames su mobile
+        const maxCarouselItems = window.innerWidth < 768 ? 6 : 15;
+        setCarouselGames(games.slice(0, maxCarouselItems));
         setTopGames([...games].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 12));
         setAllGames(games);
       } catch (err) {
@@ -42,14 +43,11 @@ function Home() {
     fetchGames();
   }, []);
 
-  // Filtra e ordina giochi in Discover
   const filteredAndSorted = useMemo(() => {
     let list = allGames.slice();
-
     if (query) {
       list = list.filter((g) => g.title.toLowerCase().includes(query.toLowerCase()));
     }
-
     switch (sortBy) {
       case "name-asc":
         list.sort((a, b) => a.title.localeCompare(b.title));
@@ -69,7 +67,6 @@ function Home() {
       default:
         break;
     }
-
     return list;
   }, [allGames, query, sortBy]);
 
@@ -124,12 +121,19 @@ function Home() {
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
           spaceBetween={20}
-          slidesPerView={4}
           slidesPerGroup={1}
           navigation
           pagination={{ clickable: true }}
           autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-          breakpoints={{ 320: { slidesPerView: 1 }, 480: { slidesPerView: 2 }, 768: { slidesPerView: 3 }, 1024: { slidesPerView: 3 } }}
+          breakpoints={{
+            320: { slidesPerView: 1 }, // smartphone piccolo
+            480: { slidesPerView: 1 }, // smartphone grande
+            640: { slidesPerView: 2 }, // tablet piccolo
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+            1280: { slidesPerView: 4 },
+            1440: { slidesPerView: 5 },
+          }}
         >
           {carouselGames.map((game) => (
             <SwiperSlide key={game.id}>{renderGameCard(game)}</SwiperSlide>
