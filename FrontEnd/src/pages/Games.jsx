@@ -77,7 +77,13 @@ function Games() {
 
   const getImage = (game) => game.thumbnail || "/img/default-game.jpg";
 
-  if (loading) return <div className="loading">Loading games...</div>;
+  if (loading)
+    return (
+      <div className="games-spinner">
+        <div className="spinner-circle"></div>
+        <span>Loading games...</span>
+      </div>
+    );
 
   return (
     <div className="container">

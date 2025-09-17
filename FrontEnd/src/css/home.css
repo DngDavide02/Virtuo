@@ -453,3 +453,29 @@ body {
     flex: 0 0 120px;
   }
 }
+
+.home-spinner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  color: var(--orange-bright);
+  font-family: "Inter", sans-serif;
+  gap: 16px;
+}
+
+.home-spinner .spinner-circle {
+  width: 60px;
+  height: 60px;
+  border: 6px solid rgba(255, 115, 4, 0.2);
+  border-top-color: var(--orange-bright);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

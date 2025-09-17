@@ -96,7 +96,13 @@ function Home() {
     </div>
   );
 
-  if (loading) return <div className="loading">Loading games...</div>;
+  if (loading)
+    return (
+      <div className="home-spinner">
+        <div className="spinner-circle"></div>
+        <span className="text-white">Loading games...</span>
+      </div>
+    );
 
   return (
     <div className="container">
