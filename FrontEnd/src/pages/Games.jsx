@@ -79,9 +79,9 @@ function Games() {
 
   if (loading)
     return (
-      <div className="games-spinner">
+      <div className="home-spinner">
         <div className="spinner-circle"></div>
-        <span>Loading games...</span>
+        <span className="text-white">Loading games...</span>
       </div>
     );
 
