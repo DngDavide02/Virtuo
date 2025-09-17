@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Container, Button, Spinner } from "react-bootstrap";
 import { useAuth } from "../js/AuthContext";
-import axios from "axios";
+import axiosInstance from "../js/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 import "../css/account.css";
-
-const API_BASE = "http://localhost:3001/api/library";
 
 export default function Account() {
   const { user, logout } = useAuth();
@@ -22,10 +20,7 @@ export default function Account() {
     const fetchLibrary = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem("token");
-        const res = await axios.get(API_BASE, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axiosInstance.get("/library");
         setGames(res.data || []);
       } catch (err) {
         console.error("Error fetching library:", err);
@@ -41,17 +36,13 @@ export default function Account() {
 
   const removeGame = async (id) => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.delete(`${API_BASE}/remove/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axiosInstance.delete(`/library/remove/${id}`);
       setGames((prev) => prev.filter((g) => g.id !== id));
     } catch (err) {
       console.error(err);
     }
   };
 
-  // Filtraggio giochi
   const filteredGames = useMemo(() => {
     return games.filter((game) => {
       const genreMatch = !genreFilter || (game.genre && game.genre.toLowerCase() === genreFilter.toLowerCase());
@@ -62,7 +53,6 @@ export default function Account() {
 
   if (!user) return <p>Loading...</p>;
 
-  // Estrai i valori unici dei filtri
   const genres = Array.from(new Set(games.map((g) => g.genre).filter(Boolean)));
   const platforms = Array.from(new Set(games.map((g) => g.platform).filter(Boolean)));
 
