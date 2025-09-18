@@ -5,19 +5,19 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [started, setStarted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // typing indicator
+  const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef(null);
   const messagesEndRef = useRef(null);
-  const currentUser = localStorage.getItem("username") || "Player";
+
+  const storedUser = localStorage.getItem("user");
+  const currentUser = storedUser ? JSON.parse(storedUser).username : "Player";
 
   const sessionId = "mock-session-1";
 
-  // scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, isLoading]);
 
-  // autofocus input on mount
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
@@ -35,21 +35,16 @@ export default function Chat() {
       timestamp: new Date().toISOString(),
     };
 
-    // append user message immediately
     setMessages((prev) => [...prev, userMsg]);
     setNewMessage("");
     inputRef.current?.focus();
-
-    // simulate "typing" while waiting for response
     setIsLoading(true);
 
     try {
-      const res = await axiosInstance.post(`/ai-chat/send?sessionId=${sessionId}`, {
-        message: trimmed,
-      });
+      const res = await axiosInstance.post(`/ai-chat/send?sessionId=${sessionId}`, { message: trimmed });
 
       const aiMsg = {
-        senderUsername: "User", // as requested
+        senderUsername: "User",
         content: res?.data?.response ?? "Sorry, I can't respond right now.",
         timestamp: new Date().toISOString(),
       };
@@ -68,7 +63,6 @@ export default function Chat() {
     }
   };
 
-  // handle Enter to send, Shift+Enter to newline
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -76,7 +70,6 @@ export default function Chat() {
     }
   };
 
-  // helper to render timestamp nicely
   const formatTime = (iso) => {
     try {
       return new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -95,7 +88,7 @@ export default function Chat() {
           return (
             <div key={idx} className={`chat-row ${isOwn ? "own-row" : "other-row"}`}>
               <div className={`avatar ${isOwn ? "avatar-own" : "avatar-other"}`} aria-hidden>
-                {msg.senderUsername.slice(0, 1).toUpperCase()}
+                {msg.senderUsername.charAt(0).toUpperCase()}
               </div>
 
               <div className={`chat-bubble ${isOwn ? "own" : "other"} fade-in`}>
