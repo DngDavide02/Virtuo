@@ -3,14 +3,20 @@ import { Link } from "react-router-dom";
 import "../css/footer.css";
 import logo from "../assets/virtuo-logo.png";
 
-function Footer() {
+/**
+ * Footer component per il sito Virtuo
+ * Contiene logo, link principali e collegamenti social
+ */
+export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-container">
+        {/* Logo aziendale */}
         <div className="footer-logo">
           <img src={logo} alt="Virtuo" className="brand-logo-minimal" />
         </div>
 
+        {/* Sezioni link: Company, Resources, Social */}
         <div className="footer-links">
           <div className="footer-section">
             <h4>Company</h4>
@@ -38,11 +44,10 @@ function Footer() {
         </div>
       </div>
 
+      {/* Copyright */}
       <div className="footer-bottom">
         <p>© {new Date().getFullYear()} Virtuo. All rights reserved.</p>
       </div>
     </footer>
   );
 }
-
-export default Footer;
