@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Container, Button, Spinner, Form } from "react-bootstrap";
+import { Container, Button, Spinner, Form, InputGroup } from "react-bootstrap";
 import { useAuth } from "../js/AuthContext";
 import axiosInstance from "../js/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
@@ -49,17 +49,14 @@ export default function Account() {
     e.preventDefault();
     setError("");
     setSuccess("");
-
     if (!newUsername.trim()) {
       setError("Inserisci un nuovo username.");
       return;
     }
-
     if (!user?.id) {
       setError("User ID mancante. Effettua il logout e poi il login per aggiornare i dati.");
       return;
     }
-
     try {
       setUpdating(true);
       const res = await axiosInstance.put(`/users/${user.id}/username`, { username: newUsername });
@@ -109,28 +106,64 @@ export default function Account() {
             </p>
           </div>
 
-          <Form onSubmit={updateUsername} className="username-form" aria-live="polite">
-            <Form.Group controlId="formNewUsername" className="mb-2">
-              <Form.Control type="text" placeholder="New username" value={newUsername} onChange={(e) => setNewUsername(e.target.value)} />
-            </Form.Group>
+          <form onSubmit={updateUsername} className="username-form" aria-live="polite" style={{ width: "100%", marginTop: "0.6rem" }}>
+            <label htmlFor="new-username" style={{ display: "block", fontSize: "0.85rem", color: "var(--muted)", marginBottom: "0.35rem", textAlign: "left" }}>
+              Change username
+            </label>
+            <InputGroup>
+              <Form.Control
+                id="new-username"
+                type="text"
+                placeholder="New username"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                style={{
+                  borderRadius: "999px 0 0 999px",
+                  background: "#1c1c1c",
+                  border: "1px solid #333",
+                  color: "#ffffff",
+                }}
+                placeholderTextColor="#eeeeee"
+              />
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={updating || !newUsername.trim()}
+                style={{
+                  borderRadius: "0 999px 999px 0",
+                  paddingLeft: "1rem",
+                  paddingRight: "1rem",
+                  fontWeight: 700,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.35rem",
+                  background: "linear-gradient(180deg, #ff7304, #d2752b)",
+                  color: "#0b0b0b",
+                  border: "none",
+                  boxShadow: "none",
+                }}
+              >
+                {updating && <Spinner animation="border" size="sm" />}
+                {updating ? "Updating" : "Save"}
+              </Button>
+            </InputGroup>
 
-            {error && (
-              <div className="alert alert-danger" role="alert">
-                {error}
-              </div>
-            )}
-            {success && (
-              <div className="alert alert-success" role="status">
-                {success}
-              </div>
-            )}
+            <div style={{ marginTop: "0.6rem" }}>
+              {error && (
+                <div className="alert alert-danger" role="alert" style={{ marginBottom: 6 }}>
+                  {error}
+                </div>
+              )}
+              {success && (
+                <div className="alert alert-success" role="status" style={{ marginBottom: 6 }}>
+                  {success}
+                </div>
+              )}
+              <div style={{ fontSize: "0.82rem", color: "var(--muted)" }}>Your username is public. Choose something unique and appropriate.</div>
+            </div>
+          </form>
 
-            <Button type="submit" variant="success" disabled={updating || !newUsername.trim()} className="btn-change-username">
-              {updating ? "Updating..." : "Change Username"}
-            </Button>
-          </Form>
-
-          <div className="account-buttons">
+          <div className="account-buttons" style={{ marginTop: 12 }}>
             {user.role === "ADMIN" && (
               <Link to="/admin">
                 <Button variant="primary" className="btn-primary">

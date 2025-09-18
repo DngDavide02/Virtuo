@@ -343,3 +343,25 @@
     width: 100%;
   }
 }
+
+/* Input del form */
+.username-form input {
+  border: 1px solid #333; /* bordo neutro, niente arancione */
+  background-color: #1c1c1c;
+  color: #ffffff; /* testo bianco */
+  transition: none !important;
+}
+
+.username-form input:focus,
+.username-form input:hover {
+  border-color: #333 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background-color: #1c1c1c;
+  color: #ffffff;
+}
+.username-form input::placeholder {
+  color: #eeeeeea6; /* placeholder più chiaro */
+  opacity: 1; /* assicurarsi che sia visibile */
+  font-size: 0.8rem;
+}
