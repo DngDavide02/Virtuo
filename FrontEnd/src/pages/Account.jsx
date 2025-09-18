@@ -1,22 +1,25 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Container, Button, Spinner } from "react-bootstrap";
+import { Container, Button, Spinner, Form } from "react-bootstrap";
 import { useAuth } from "../js/AuthContext";
 import axiosInstance from "../js/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 import "../css/account.css";
 
 export default function Account() {
-  const { user, logout } = useAuth();
+  const { user, logout, login } = useAuth();
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(false);
   const [genreFilter, setGenreFilter] = useState("");
   const [platformFilter, setPlatformFilter] = useState("");
+  const [newUsername, setNewUsername] = useState("");
+  const [updating, setUpdating] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user || !user.username) return;
-
+    if (!user?.id) return;
     const fetchLibrary = async () => {
       try {
         setLoading(true);
@@ -28,7 +31,6 @@ export default function Account() {
         setLoading(false);
       }
     };
-
     fetchLibrary();
   }, [user]);
 
@@ -43,10 +45,42 @@ export default function Account() {
     }
   };
 
+  const updateUsername = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (!newUsername.trim()) {
+      setError("Inserisci un nuovo username.");
+      return;
+    }
+
+    if (!user?.id) {
+      setError("User ID mancante. Effettua il logout e poi il login per aggiornare i dati.");
+      return;
+    }
+
+    try {
+      setUpdating(true);
+      const res = await axiosInstance.put(`/users/${user.id}/username`, { username: newUsername });
+      const updatedUser = { ...user, username: res.data.username };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      login(updatedUser);
+      setSuccess("Username aggiornato con successo.");
+      setNewUsername("");
+    } catch (err) {
+      const serverMsg = err?.response?.data?.message || err?.message || "Errore durante l'aggiornamento.";
+      setError(serverMsg);
+      console.error("Error updating username:", err);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   const filteredGames = useMemo(() => {
     return games.filter((game) => {
-      const genreMatch = !genreFilter || (game.genre && game.genre.toLowerCase() === genreFilter.toLowerCase());
-      const platformMatch = !platformFilter || (game.platform && game.platform.toLowerCase() === platformFilter.toLowerCase());
+      const genreMatch = !genreFilter || game.genre?.toLowerCase() === genreFilter.toLowerCase();
+      const platformMatch = !platformFilter || game.platform?.toLowerCase() === platformFilter.toLowerCase();
       return genreMatch && platformMatch;
     });
   }, [games, genreFilter, platformFilter]);
@@ -59,10 +93,9 @@ export default function Account() {
   return (
     <Container className="account-container" role="main">
       <div className="account-wrapper">
-        {/* PANEL */}
         <aside className="account-panel" aria-label="Account info">
           <div className="account-avatar" aria-hidden>
-            {user.username ? user.username.charAt(0).toUpperCase() : "U"}
+            {user.username?.charAt(0).toUpperCase() || "U"}
           </div>
           <h2 className="account-name">{user.username}</h2>
           <p className="account-role">{user.role}</p>
@@ -75,6 +108,27 @@ export default function Account() {
               <strong>Role:</strong> {user.role}
             </p>
           </div>
+
+          <Form onSubmit={updateUsername} className="username-form" aria-live="polite">
+            <Form.Group controlId="formNewUsername" className="mb-2">
+              <Form.Control type="text" placeholder="New username" value={newUsername} onChange={(e) => setNewUsername(e.target.value)} />
+            </Form.Group>
+
+            {error && (
+              <div className="alert alert-danger" role="alert">
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="alert alert-success" role="status">
+                {success}
+              </div>
+            )}
+
+            <Button type="submit" variant="success" disabled={updating || !newUsername.trim()} className="btn-change-username">
+              {updating ? "Updating..." : "Change Username"}
+            </Button>
+          </Form>
 
           <div className="account-buttons">
             {user.role === "ADMIN" && (
@@ -90,7 +144,6 @@ export default function Account() {
           </div>
         </aside>
 
-        {/* CONTENT */}
         <section className="account-content" aria-label="Library">
           <div className="library-header">
             <h3 className="library-title">My Library</h3>
@@ -101,7 +154,6 @@ export default function Account() {
             </div>
           </div>
 
-          {/* FILTRI */}
           <div className="library-filters">
             <select value={genreFilter} onChange={(e) => setGenreFilter(e.target.value)}>
               <option value="">All Genres</option>
@@ -121,7 +173,6 @@ export default function Account() {
             </select>
           </div>
 
-          {/* LOADING / EMPTY / GRID */}
           {loading ? (
             <div className="library-page-spinner">
               <Spinner animation="border" />

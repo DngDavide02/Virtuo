@@ -43,7 +43,20 @@ export function AuthProvider({ children }) {
     localStorage.setItem("library", JSON.stringify(updated));
   };
 
-  return <AuthContext.Provider value={{ user, login, logout, library, addToLibrary, removeFromLibrary }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        library,
+        addToLibrary,
+        removeFromLibrary,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {

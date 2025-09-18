@@ -15,12 +15,11 @@ function Login() {
     e.preventDefault();
     setError("");
     try {
-      const res = await loginUser(username, password);
-      // res es: { username, token, role }
-      login({ username: res.username, role: res.role, token: res.token });
-      navigate("/");
+      // PASSA login come callback
+      const _res = await loginUser(username, password, login);
+      navigate("/"); // redirect dopo login
     } catch (err) {
-      setError(err.error || "Login failed");
+      setError(err?.response?.data?.message || "Login failed");
     }
   };
 
