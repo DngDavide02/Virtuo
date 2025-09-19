@@ -1,12 +1,15 @@
 package dangelodavide.BackEnd.controller;
 
-import org.springframework.web.bind.annotation.*;
-import java.util.*;
+import org.springframework.web.bind.annotation.*; // importa le annotazioni REST
+import java.util.*; // importa List, Map, HashMap, Random
 
+// Indica che questa classe è un controller REST
 @RestController
+// Tutte le rotte di questo controller iniziano con /api/ai-chat
 @RequestMapping("/api/ai-chat")
 public class AiChatController {
 
+    // Mappa di parole chiave -> risposte possibili
     private final Map<String, List<String>> keywordResponses = Map.ofEntries(
             Map.entry("ciao", List.of("Ciao! Come va?", "Ehi, tutto bene?", "Ciao, pronto per giocare un po'?", "Ciao! Ti va di fare due chiacchiere?")),
             Map.entry("ranked", List.of("Hai fatto qualche partita ranked oggi?", "Come sta andando la tua ranked?", "Hai vinto l'ultima partita ranked?", "Ti stai divertendo con le ranked o sono stressanti?")),
@@ -24,6 +27,7 @@ public class AiChatController {
             Map.entry("triste", List.of("Mi dispiace, vuoi parlarne?", "Capisco, a volte ci sono giornate no.", "Ti va di sfogarti un po’?", "Non sei solo, tranquillo."))
     );
 
+    // Mappa di frasi -> risposte possibili
     private final Map<String, List<String>> phraseResponses = Map.ofEntries(
             Map.entry("come stai", List.of("Sto bene, grazie. E tu?", "Tutto bene, grazie per chiedere.", "Bene, e tu?")),
             Map.entry("come va", List.of("Va tutto bene, e da te?", "Tutto ok, grazie.", "Va bene, come va a te?")),
@@ -36,6 +40,7 @@ public class AiChatController {
             Map.entry("non mi piace", List.of("Capisco, i gusti sono gusti.", "Ok, ci sta non piaccia a tutti.", "Va bene, ognuno ha le sue preferenze."))
     );
 
+    // Mappa di affermazioni -> risposte possibili
     private final Map<String, List<String>> affirmationResponses = Map.ofEntries(
             Map.entry("sì", List.of("Perfetto!", "Capito.", "Va bene.", "Ok, grazie per la conferma.")),
             Map.entry("si", List.of("Perfetto!", "Capito.", "Va bene.", "Ok, grazie per la conferma.")),
@@ -48,6 +53,7 @@ public class AiChatController {
             Map.entry("mah", List.of("Sei indeciso?", "Ok, non sei convinto.", "Va bene, dimmi di più."))
     );
 
+    // Risposte di fallback se non c'è corrispondenza con parole chiave o frasi
     private final List<String> fallbackResponses = List.of(
             "Ah capisco, continua.",
             "Interessante, raccontami di più.",
@@ -61,25 +67,29 @@ public class AiChatController {
             "Ok, e poi cosa è successo?"
     );
 
-    private final Random random = new Random();
-    private final Map<String, List<String>> sessionContext = new HashMap<>();
+    private final Random random = new Random(); // oggetto per selezionare risposte casuali
+    private final Map<String, List<String>> sessionContext = new HashMap<>(); // contesto conversazioni per sessione
 
+    // Endpoint POST per inviare un messaggio all'AI
     @PostMapping("/send")
     public Map<String, Object> sendMessage(@RequestParam String sessionId, @RequestBody Map<String, String> payload) {
-        String userMessage = payload.get("message").toLowerCase();
+        String userMessage = payload.get("message").toLowerCase(); // messaggio utente in minuscolo
 
+        // inizializza contesto sessione se non presente
         sessionContext.putIfAbsent(sessionId, new ArrayList<>());
-        sessionContext.get(sessionId).add("User: " + userMessage);
+        sessionContext.get(sessionId).add("User: " + userMessage); // salva messaggio utente nel contesto
 
-        List<String> responses = new ArrayList<>();
+        List<String> responses = new ArrayList<>(); // lista risposte generate
 
+        // cerca corrispondenze tra frasi dell'utente e le frasi predefinite
         for (String phrase : phraseResponses.keySet()) {
             if (userMessage.contains(phrase)) {
                 List<String> possible = phraseResponses.get(phrase);
-                responses.add(possible.get(random.nextInt(possible.size())));
+                responses.add(possible.get(random.nextInt(possible.size()))); // aggiunge risposta casuale
             }
         }
 
+        // analizza parola per parola le keyword e le affermazioni
         for (String word : userMessage.split(" ")) {
             if (keywordResponses.containsKey(word)) {
                 List<String> possible = keywordResponses.get(word);
@@ -91,11 +101,14 @@ public class AiChatController {
             }
         }
 
+        // se nessuna risposta trovata, usa fallback
         String aiResponse = responses.isEmpty() ? fallbackResponses.get(random.nextInt(fallbackResponses.size()))
                 : String.join(" ", responses);
 
+        // salva la risposta AI nel contesto sessione
         sessionContext.get(sessionId).add("AI: " + aiResponse);
 
+        // ritorna risposta AI e contesto conversazione
         return Map.of(
                 "response", aiResponse,
                 "context", sessionContext.get(sessionId)
