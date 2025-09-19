@@ -1,41 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axiosInstance from "../js/axiosInstance";
-import { useAuth } from "../js/AuthContext";
-import "../css/gameDetails.css";
+import React, { useEffect, useState } from "react"; // import React e hook useState/useEffect
+import { useParams } from "react-router-dom"; // per leggere l'id del gioco dall'URL
+import axiosInstance from "../js/axiosInstance"; // instance di axios con token e config
+import { useAuth } from "../js/AuthContext"; // context per utente e libreria
+import "../css/gameDetails.css"; // CSS della pagina
 
 export default function GameDetails() {
-  const { id } = useParams();
-  const [game, setGame] = useState(null);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const { user, addToLibrary } = useAuth();
+  const { id } = useParams(); // legge l'id del gioco dall'URL
+  const [game, setGame] = useState(null); // stato per i dati del gioco
+  const [error, setError] = useState(""); // stato per messaggi di errore
+  const [success, setSuccess] = useState(""); // stato per messaggi di successo
+  const { user, addToLibrary } = useAuth(); // prende utente loggato e funzione per aggiornare la libreria
 
+  // Effetto per recuperare i dati del gioco dall'API
   useEffect(() => {
     const fetchGame = async () => {
       try {
-        console.log("[DEBUG] Fetching game with id:", id);
+        console.log("[DEBUG] Fetching game with id:", id); // debug
         const res = await axiosInstance.get(`/games/${id}`);
-        console.log("[DEBUG] Game data fetched:", res.data);
-        setGame(res.data);
+        console.log("[DEBUG] Game data fetched:", res.data); // debug
+        setGame(res.data); // salva i dati del gioco nello stato
       } catch (err) {
-        console.error("[DEBUG] Error fetching game:", err);
-        setError("Unable to fetch game data.");
+        console.error("[DEBUG] Error fetching game:", err); // log errore
+        setError("Unable to fetch game data."); // mostra messaggio errore
       }
     };
     fetchGame();
   }, [id]);
 
+  // Funzione per aggiungere il gioco alla libreria dell'utente
   const handleAddToLibrary = async () => {
     if (!user) {
-      setError("You must be logged in to add games to your library.");
+      setError("You must be logged in to add games to your library."); // controlla login
       return;
     }
 
     try {
-      setError("");
-      setSuccess("");
+      setError(""); // reset errori
+      setSuccess(""); // reset successo
 
+      // Crea l'oggetto con i dati del gioco da salvare
       const gameDTO = {
         id: game.id,
         title: game.title,
@@ -50,35 +53,38 @@ export default function GameDetails() {
         rating: game.rating || 0,
       };
 
+      // Invio richiesta POST per aggiungere il gioco alla libreria
       const response = await axiosInstance.post("/library/add", gameDTO, {
         headers: { Authorization: `Bearer ${user.token}` },
-        validateStatus: () => true,
+        validateStatus: () => true, // evita throw automatico per status != 2xx
       });
 
+      // Gestione delle risposte dal server
       switch (response.status) {
         case 200:
-          addToLibrary(game);
-          setSuccess("Game added to your library!");
+          addToLibrary(game); // aggiorna libreria locale
+          setSuccess("Game added to your library!"); // messaggio successo
           break;
         case 409:
-          setError("This game is already in your library.");
+          setError("This game is already in your library."); // gioco già presente
           break;
         case 401:
-          setError("You are not authorized. Please log in.");
+          setError("You are not authorized. Please log in."); // non autorizzato
           break;
         default:
-          setError("Failed to add game to library.");
+          setError("Failed to add game to library."); // errore generico
       }
     } catch (err) {
-      console.error("[DEBUG] Unexpected error:", err);
-      setError("An unexpected error occurred.");
+      console.error("[DEBUG] Unexpected error:", err); // log errore
+      setError("An unexpected error occurred."); // messaggio errore generico
     }
   };
 
-  if (!game) return <p>Loading...</p>;
+  if (!game) return <p>Loading...</p>; // mostra loading finché i dati non arrivano
 
   return (
     <div className="game-details-container">
+      {/* Hero section con immagine e overlay */}
       <section className="game-hero-section">
         <div
           className="game-hero-image"
@@ -96,16 +102,18 @@ export default function GameDetails() {
         </div>
       </section>
 
+      {/* Sezione descrizione del gioco */}
       <section className="game-description-section">
         <h2 className="section-title">Description</h2>
         <div className="game-description mb-3">{game.short_description || "No description available."}</div>
         <button onClick={handleAddToLibrary} className="pill-button primary" disabled={!user}>
           Add to Library
         </button>
-        {error && <p className="error-message">{error}</p>}
-        {success && <p className="success-message">{success}</p>}
+        {error && <p className="error-message">{error}</p>} {/* messaggi di errore */}
+        {success && <p className="success-message">{success}</p>} {/* messaggi di successo */}
       </section>
 
+      {/* Sezione informazioni aggiuntive del gioco */}
       <section className="game-info-section">
         <h2 className="section-title">Game Info</h2>
         <ul className="game-info-list">

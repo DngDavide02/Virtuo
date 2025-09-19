@@ -2,44 +2,48 @@
    SWIPER / CAROUSEL
    ========================== */
 .swiper {
-  position: relative !important;
-  padding: 3rem 2rem 5rem !important;
+  position: relative !important; /* Necessario per posizionare elementi assoluti interni */
+  padding: 3rem 2rem 5rem !important; /* Spaziatura interna (sopra, lati, sotto) */
 }
 
+/* Bottoni di navigazione (next/prev) */
 .swiper .swiper-button-next,
 .swiper .swiper-button-prev {
-  color: #fff !important;
+  color: #fff !important; /* Icone bianche */
   width: 35px !important;
   height: 35px !important;
-  display: flex !important;
+  display: flex !important; /* Per centrare l’icona */
   justify-content: center !important;
   align-items: center !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  z-index: 20 !important;
-  background: none !important;
+  top: 50% !important; /* Posizionati verticalmente al centro */
+  transform: translateY(-50%) !important; /* Centramento preciso */
+  z-index: 20 !important; /* Sopra i contenuti dello slider */
+  background: none !important; /* Nessuno sfondo */
 }
 
 .swiper .swiper-button-next {
-  right: 15px !important;
+  right: 15px !important; /* Distanza dal bordo destro */
 }
 
 .swiper .swiper-button-prev {
-  left: 15px !important;
+  left: 15px !important; /* Distanza dal bordo sinistro */
 }
 
+/* Paginazione (bullet points) */
 .swiper .swiper-pagination {
-  bottom: 15px !important;
+  bottom: 15px !important; /* Posizionata vicino al fondo */
 }
 
+/* Stile base dei bullet */
 .swiper .swiper-pagination-bullet {
-  background: #fff !important;
-  opacity: 0.6 !important;
-  margin: 0 6px !important;
-  transition: opacity 0.3s ease, transform 0.2s ease !important;
+  background: #fff !important; /* Colore bianco */
+  opacity: 0.6 !important; /* Semitrasparenti */
+  margin: 0 6px !important; /* Spaziatura orizzontale */
+  transition: opacity 0.3s ease, transform 0.2s ease !important; /* Animazione hover/active */
 }
 
+/* Bullet attivo (slide corrente) */
 .swiper .swiper-pagination-bullet-active {
-  opacity: 1 !important;
-  transform: scale(1.2) !important;
+  opacity: 1 !important; /* Completamente visibile */
+  transform: scale(1.2) !important; /* Leggero ingrandimento */
 }

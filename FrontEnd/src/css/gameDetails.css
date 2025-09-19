@@ -1,10 +1,9 @@
-/* gameDetails.css - stile isolato per GameDetails
-   Non contiene regole globali che possano interferire con altre pagine.
-   Si appoggia alle variabili già presenti in home.css (fallback inclusi).
-*/
+/* ==========================
+   GAME DETAILS PAGE STYLES
+   Scope locale: .game-details-container
+   ========================== */
 
 :root {
-  /* fallback (usate solo se non definite globalmente) */
   --radius-lg: 18px;
   --radius-md: 12px;
   --orange-bright: #ff7304;
@@ -16,17 +15,17 @@
   --card-shadow: 0 8px 30px rgba(2, 2, 2, 0.7);
 }
 
-/* Container principale (scope locale) */
+/* Container principale */
 .game-details-container {
   max-width: var(--container-w, 1200px);
   margin: 2rem auto;
   padding: 0 1.5rem;
-  box-sizing: border-box;
   color: var(--text-light);
+  box-sizing: border-box;
 }
 
 /* HERO */
-.game-details-container .game-hero-section {
+.game-hero-section {
   position: relative;
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -35,7 +34,7 @@
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.6));
 }
 
-.game-details-container .game-hero-image {
+.game-hero-image {
   height: clamp(300px, 42vh, 520px);
   background-size: cover;
   background-position: center;
@@ -43,21 +42,20 @@
   will-change: transform;
 }
 
-/* leggera scala al passaggio del mouse (solo se hover disponibile) */
 @media (hover: hover) {
-  .game-details-container .game-hero-section:hover .game-hero-image {
+  .game-hero-section:hover .game-hero-image {
     transform: scale(1.02);
   }
 }
 
-.game-details-container .game-hero-overlay {
+.game-hero-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.72));
   pointer-events: none;
 }
 
-.game-details-container .game-hero-content {
+.game-hero-content {
   position: absolute;
   bottom: clamp(14px, 4vh, 36px);
   left: clamp(14px, 3vw, 36px);
@@ -67,7 +65,7 @@
   text-shadow: 0 6px 18px rgba(0, 0, 0, 0.65);
 }
 
-.game-details-container .game-hero-content h1 {
+.game-hero-content h1 {
   margin: 0 0 0.5rem 0;
   font-size: clamp(1.8rem, 3.8vw, 3rem);
   font-weight: 700;
@@ -76,15 +74,15 @@
   line-height: 1.03;
 }
 
-/* badges (genre + platform) */
-.game-details-container .game-badges {
+/* BADGES: GENRE + PLATFORM */
+.game-badges {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
 
-.game-details-container .badge {
+.badge {
   display: inline-flex;
   align-items: center;
   padding: 0.35rem 0.85rem;
@@ -97,19 +95,19 @@
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-.game-details-container .badge.genre {
+.badge.genre {
   background-color: var(--orange-bright);
   color: #0b0b0b;
   border: none;
 }
 
-.game-details-container .badge.platform {
+.badge.platform {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
   color: var(--text-light);
 }
 
 /* DESCRIPTION CARD */
-.game-details-container .game-description-section {
+.game-description-section {
   margin: 1.4rem 0;
   padding: 1.2rem;
   border-radius: var(--radius-md);
@@ -117,7 +115,7 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
-.game-details-container .section-title {
+.section-title {
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--muted);
@@ -128,7 +126,7 @@
   align-items: center;
 }
 
-.game-details-container .section-title::after {
+.section-title::after {
   content: "";
   display: inline-block;
   width: 44px;
@@ -138,15 +136,15 @@
   border-radius: 2px;
 }
 
-.game-details-container .game-description {
+.game-description {
   color: var(--text-light);
   line-height: 1.7;
   font-size: 1rem;
   white-space: pre-wrap;
 }
 
-/* CTA: usa selector locale per non interferire con .pill-button globale se presente */
-.game-details-container .cta-row {
+/* CTA BUTTONS */
+.cta-row {
   margin-top: 1rem;
   display: flex;
   gap: 0.8rem;
@@ -154,8 +152,7 @@
   flex-wrap: wrap;
 }
 
-/* pulsante primario locale (più specifico, non tocca regole globali) */
-.game-details-container .pill-button.primary {
+.pill-button.primary {
   padding: 0.72rem 1.35rem;
   border-radius: 999px;
   font-weight: 700;
@@ -167,23 +164,19 @@
   transition: transform 0.16s ease, box-shadow 0.16s ease;
 }
 
-/* hover/active - solo se hover disponibile */
 @media (hover: hover) {
-  .game-details-container .pill-button.primary:hover:not(:disabled) {
+  .pill-button.primary:hover:not(:disabled) {
     transform: translateY(-3px);
     box-shadow: 0 16px 40px rgba(255, 115, 4, 0.12);
   }
 }
 
-/* assicurati che il focus non crei contorni extra: niente cambio globale qui,
-   se vuoi il focus locale, usa un'ombra discreta */
-.game-details-container .pill-button.primary:focus {
+.pill-button.primary:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(255, 115, 4, 0.1);
 }
 
-/* disabled */
-.game-details-container .pill-button.primary:disabled {
+.pill-button.primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
@@ -191,7 +184,7 @@
 }
 
 /* INFO GRID */
-.game-details-container .game-info-section {
+.game-info-section {
   margin-top: 1.25rem;
   padding: 1.2rem;
   border-radius: var(--radius-md);
@@ -199,7 +192,7 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
-.game-details-container .game-info-list {
+.game-info-list {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -208,7 +201,7 @@
   gap: 0.75rem 1.2rem;
 }
 
-.game-details-container .game-info-list li {
+.game-info-list li {
   color: var(--text-light);
   font-size: 0.95rem;
   display: flex;
@@ -216,59 +209,59 @@
   align-items: baseline;
 }
 
-.game-details-container .game-info-list li strong {
+.game-info-list li strong {
   min-width: 92px;
   color: var(--muted);
   font-weight: 700;
   font-size: 0.85rem;
 }
 
-/* inline links */
-.game-details-container .game-info-list a {
+.game-info-list a {
   color: var(--orange-bright);
   text-decoration: none;
   font-weight: 700;
 }
 
-.game-details-container .game-info-list a:hover {
+.game-info-list a:hover {
   text-decoration: underline;
 }
 
-/* small utilities locale */
-.game-details-container .error-message {
+/* UTILITIES LOCALI */
+.error-message {
   color: #ff7b7b;
   margin-top: 0.6rem;
   font-weight: 600;
 }
 
-/* responsive */
+/* RESPONSIVE */
 @media (max-width: 900px) {
-  .game-details-container .game-hero-content {
+  .game-hero-content {
     max-width: 86%;
     left: 16px;
     bottom: 18px;
   }
-  .game-details-container .game-info-list {
+  .game-info-list {
     grid-template-columns: 1fr;
   }
-  .game-details-container .game-hero-image {
+  .game-hero-image {
     height: clamp(220px, 36vh, 380px);
   }
 }
 
-/* entrance animation (respect user preference) */
+/* ENTRANCE ANIMATION */
 @media (prefers-reduced-motion: no-preference) {
   .game-details-container {
     animation: gd-fadeIn 0.42s ease;
   }
-  @keyframes gd-fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+}
+
+@keyframes gd-fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

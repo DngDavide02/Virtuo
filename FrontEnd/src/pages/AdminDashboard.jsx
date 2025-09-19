@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Table, Button, Form, Spinner } from "react-bootstrap";
+import { Container, Button, Form, Spinner } from "react-bootstrap";
 import axios from "axios";
 import "../css/adminPage.css";
 
@@ -11,13 +11,12 @@ export default function AdminUsers() {
   const API_URL = "http://localhost:3001/api/admin/users";
   const token = localStorage.getItem("token");
 
+  /* Recupera lista utenti dall'API */
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(API_URL, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(API_URL, { headers: { Authorization: `Bearer ${token}` } });
         setUsers(res.data || []);
       } catch (err) {
         console.error("Error fetching users:", err);
@@ -28,6 +27,7 @@ export default function AdminUsers() {
     fetchUsers();
   }, [token]);
 
+  /* Aggiorna il ruolo di un utente */
   const handleRoleChange = async (userId, newRole) => {
     try {
       setUpdatingId(userId);
@@ -40,12 +40,11 @@ export default function AdminUsers() {
     }
   };
 
+  /* Elimina un utente */
   const handleDelete = async (userId) => {
     if (!window.confirm("Sei sicuro di voler eliminare questo utente?")) return;
     try {
-      await axios.delete(`${API_URL}/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(`${API_URL}/${userId}`, { headers: { Authorization: `Bearer ${token}` } });
       setUsers((prev) => prev.filter((u) => u.id !== userId));
     } catch (err) {
       console.error("Error deleting user:", err);

@@ -1,11 +1,14 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "../css/help.css";
+import React from "react"; // Import di React
+import { Link } from "react-router-dom"; // Link per navigazione interna
+import "../css/help.css"; // Import CSS specifico della pagina
 
 function Help() {
   return (
     <div className="page-container">
+      {/* Titolo principale della pagina */}
       <h1 className="page-title">Help & FAQ</h1>
+
+      {/* Paragrafo introduttivo con link alla pagina About */}
       <p className="page-text">
         Need assistance? Check our FAQ below or visit our{" "}
         <Link to="/about" className="inline-link">
@@ -14,9 +17,12 @@ function Help() {
         to learn more about Virtuo.
       </p>
 
+      {/* Sottotitolo per la sezione FAQ */}
       <h2 className="page-subtitle">Frequently Asked Questions</h2>
 
+      {/* Contenitore delle domande frequenti */}
       <div className="page-faq">
+        {/* Singolo elemento FAQ */}
         <div className="faq-item">
           <p>
             <strong>Q:</strong> How do I navigate the platform?
@@ -60,4 +66,4 @@ function Help() {
   );
 }
 
-export default Help;
+export default Help; // Esporta il componente per poterlo usare in altre parti dell'app

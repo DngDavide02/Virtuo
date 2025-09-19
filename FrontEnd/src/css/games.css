@@ -1,4 +1,7 @@
-/* games.css */
+/* ==========================
+   GAMES PAGE STYLES
+   Scope locale: .page-container
+   ========================== */
 
 /* Contenitore principale della pagina */
 .page-container {
@@ -25,7 +28,7 @@
   margin-bottom: 2rem;
 }
 
-/* Lista di giochi */
+/* Griglia di giochi */
 .games-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -75,7 +78,7 @@
   margin: 0;
 }
 
-/* Pulsante di azione (es. dettagli o aggiungi ai preferiti) */
+/* Pulsante di azione */
 .game-card button {
   margin-top: auto;
   padding: 0.5rem 1rem;

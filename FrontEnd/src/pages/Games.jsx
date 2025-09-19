@@ -1,55 +1,61 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import axiosInstance from "../js/axiosInstance";
-import "../css/home.css";
+import React, { useEffect, useMemo, useState } from "react"; // React e hook
+import { Link, useLocation } from "react-router-dom"; // Link per navigazione e useLocation per query params
+import axiosInstance from "../js/axiosInstance"; // axios configurato
+import "../css/home.css"; // CSS della pagina
 
 function Games() {
-  const [games, setGames] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // Stati principali
+  const [games, setGames] = useState([]); // lista giochi
+  const [loading, setLoading] = useState(true); // loading spinner
 
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedPlatform, setSelectedPlatform] = useState("");
-  const [sortBy, setSortBy] = useState("");
-  const [page, setPage] = useState(1);
-  const [pageSize] = useState(12);
+  // Filtri e paginazione
+  const [selectedCategory, setSelectedCategory] = useState(""); // filtro categoria
+  const [selectedPlatform, setSelectedPlatform] = useState(""); // filtro piattaforma
+  const [sortBy, setSortBy] = useState(""); // ordinamento
+  const [page, setPage] = useState(1); // pagina corrente
+  const [pageSize] = useState(12); // numero giochi per pagina
 
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const query = queryParams.get("search") || "";
+  const location = useLocation(); // prende l'URL
+  const queryParams = new URLSearchParams(location.search); // parametri query
+  const query = queryParams.get("search") || ""; // parametro di ricerca
 
   const categories = ["mmorpg", "shooter", "moba", "racing", "sports", "social", "sandbox", "open-world"];
   const platforms = ["pc", "browser"];
 
+  // Effetto per fetch dei giochi dall'API
   useEffect(() => {
     const fetchGames = async () => {
       try {
         setLoading(true);
         let res;
         if (query) {
+          // ricerca
           res = await axiosInstance.get("/games/search", { params: { q: query } });
         } else {
+          // tutti i giochi
           res = await axiosInstance.get("/games");
         }
-        setGames(res.data || []);
+        setGames(res.data || []); // aggiorna lista giochi
       } catch (err) {
         console.error("Errore fetch giochi:", err);
       } finally {
         setLoading(false);
-        setPage(1);
+        setPage(1); // reset pagina a 1 ad ogni fetch
       }
     };
     fetchGames();
   }, [query]);
 
+  // Filtraggio e ordinamento dei giochi
   const filteredAndSorted = useMemo(() => {
     let list = [...games];
 
-    // Filtro categoria
+    // filtro categoria
     if (selectedCategory) {
       list = list.filter((g) => g.genre?.toLowerCase().includes(selectedCategory.toLowerCase()));
     }
 
-    // Filtro piattaforma
+    // filtro piattaforma
     if (selectedPlatform) {
       list = list.filter((g) => {
         if (!g.platform) return false;
@@ -57,7 +63,7 @@ function Games() {
       });
     }
 
-    // Ordinamento
+    // ordinamento
     switch (sortBy) {
       case "alphabetical":
         list.sort((a, b) => a.title.localeCompare(b.title));
@@ -72,10 +78,11 @@ function Games() {
     return list;
   }, [games, selectedCategory, selectedPlatform, sortBy]);
 
+  // Paginazione
   const paginated = useMemo(() => filteredAndSorted.slice(0, page * pageSize), [filteredAndSorted, page, pageSize]);
-  const hasMore = paginated.length < filteredAndSorted.length;
+  const hasMore = paginated.length < filteredAndSorted.length; // verifica se ci sono altri giochi
 
-  const getImage = (game) => game.thumbnail || "/img/default-game.jpg";
+  const getImage = (game) => game.thumbnail || "/img/default-game.jpg"; // immagine di fallback
 
   if (loading)
     return (
@@ -88,6 +95,7 @@ function Games() {
   return (
     <div className="container">
       <section className="games-section all-games fade-in">
+        {/* Filtri e selezioni */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12, alignItems: "center" }}>
           <h3 className="section-title" style={{ margin: 0 }}>
             All Games
@@ -139,8 +147,10 @@ function Games() {
           </select>
         </div>
 
+        {/* Conteggio risultati */}
         <div style={{ marginBottom: 10, color: "var(--muted)", fontSize: 13 }}>{filteredAndSorted.length} results</div>
 
+        {/* Griglia dei giochi */}
         <div className="all-games-grid">
           {paginated.map((game) => (
             <div className="game-card large" key={game.id}>
@@ -166,6 +176,7 @@ function Games() {
           ))}
         </div>
 
+        {/* Pulsanti Load More / Reset */}
         <div style={{ display: "flex", justifyContent: "center", marginTop: 18, gap: 12 }}>
           {hasMore ? (
             <button onClick={() => setPage((p) => p + 1)} className="pill-button primary">

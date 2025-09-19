@@ -1,64 +1,80 @@
-/* about.css */
-
+/* ============================= */
+/* ABOUT PAGE CONTAINER          */
+/* ============================= */
 .page-container.about-page {
-  max-width: 900px;
-  margin: 3rem auto;
-  padding: 2rem;
-  background: #1f1f1f;
-  border-radius: 18px;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
-  color: var(--text-light);
+  max-width: 900px; /* larghezza massima del contenitore */
+  margin: 3rem auto; /* centrato orizzontalmente con margine verticale */
+  padding: 2rem; /* padding interno */
+  background: #1f1f1f; /* sfondo scuro */
+  border-radius: 18px; /* angoli arrotondati */
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7); /* ombra profonda */
+  color: var(--text-light); /* colore del testo */
 }
 
+/* ============================= */
+/* PAGE TITLE                    */
+/* ============================= */
 .page-container.about-page h1 {
-  font-size: 2.8rem;
-  margin-bottom: 1.5rem;
-  color: var(--orange-bright);
-  text-align: center;
+  font-size: 2.8rem; /* dimensione grande del titolo */
+  margin-bottom: 1.5rem; /* spazio sotto il titolo */
+  color: var(--orange-bright); /* colore arancione per evidenziare */
+  text-align: center; /* centrato orizzontalmente */
 }
 
+/* ============================= */
+/* PARAGRAPHS                    */
+/* ============================= */
 .page-container.about-page p {
-  font-size: 1.15rem;
-  line-height: 1.7;
-  margin-bottom: 1.5rem;
+  font-size: 1.15rem; /* dimensione leggibile del testo */
+  line-height: 1.7; /* interlinea per leggibilità */
+  margin-bottom: 1.5rem; /* spazio tra paragrafi */
   color: var(--text-light);
 }
 
+/* ============================= */
+/* LINKS                         */
+/* ============================= */
 .page-container.about-page a {
-  color: var(--orange-bright);
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.2s ease;
+  color: var(--orange-bright); /* colore principale link */
+  text-decoration: none; /* rimuove sottolineatura */
+  font-weight: 600; /* leggermente in grassetto */
+  transition: color 0.2s ease; /* transizione dolce al passaggio del mouse */
 }
 
 .page-container.about-page a:hover {
-  color: var(--orange-dark);
-  text-decoration: underline;
+  color: var(--orange-dark); /* cambio colore al passaggio del mouse */
+  text-decoration: underline; /* sottolineatura su hover */
 }
 
+/* ============================= */
+/* LISTS                         */
+/* ============================= */
 .page-container.about-page ul {
-  list-style-type: disc;
-  margin-left: 1.5rem;
-  margin-bottom: 1.5rem;
+  list-style-type: disc; /* punti elenco */
+  margin-left: 1.5rem; /* indentazione della lista */
+  margin-bottom: 1.5rem; /* spazio sotto la lista */
 }
 
 .page-container.about-page li {
-  margin-bottom: 0.6rem;
-  font-size: 1.1rem;
+  margin-bottom: 0.6rem; /* spazio tra elementi lista */
+  font-size: 1.1rem; /* dimensione leggibile */
 }
 
+/* ============================= */
+/* RESPONSIVE - TABLET & MOBILE  */
+/* ============================= */
 @media (max-width: 768px) {
   .page-container.about-page {
-    margin: 2rem 1rem;
-    padding: 1.5rem;
+    margin: 2rem 1rem; /* riduce margini */
+    padding: 1.5rem; /* riduce padding */
   }
 
   .page-container.about-page h1 {
-    font-size: 2rem;
+    font-size: 2rem; /* riduce dimensione titolo */
   }
 
   .page-container.about-page p,
   .page-container.about-page li {
-    font-size: 1rem;
+    font-size: 1rem; /* riduce dimensione testo e lista */
   }
 }

@@ -1,33 +1,44 @@
+/* ============================= */
+/* TITOLI                         */
+/* ============================= */
 .admin-page h2 {
   color: var(--orange-bright);
   margin-bottom: 1.5rem;
   font-weight: 600;
 }
 
-/* Wrapper per overflow e bordi arrotondati */
+/* ============================= */
+/* WRAPPER PER LA TABELLA         */
+/* ============================= */
 .admin-page .table-wrapper {
-  overflow-x: auto;
+  overflow-x: auto; /* consente lo scroll orizzontale se la tabella è troppo larga */
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Tabella scura */
+/* ============================= */
+/* TABELLA SCURA                  */
+/* ============================= */
 .admin-page .admin-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: collapse; /* rimuove spazi tra celle */
   background-color: var(--surface);
   color: var(--text-light);
-  min-width: 600px;
+  min-width: 600px; /* assicura dimensione minima per leggibilità */
 }
 
-/* Header */
+/* ============================= */
+/* HEADER DELLA TABELLA           */
+/* ============================= */
 .admin-page .admin-table thead {
   background: linear-gradient(180deg, var(--orange-bright), var(--orange-dark));
   color: #0b0b0b;
   font-weight: 600;
 }
 
-/* Celle */
+/* ============================= */
+/* CELLE DELLA TABELLA            */
+/* ============================= */
 .admin-page .admin-table th,
 .admin-page .admin-table td {
   padding: 12px 15px;
@@ -35,12 +46,16 @@
   text-align: left;
 }
 
-/* Riga hover */
+/* ============================= */
+/* RIGA HOVER                     */
+/* ============================= */
 .admin-page .admin-table tbody tr:hover {
   background: rgba(255, 115, 4, 0.08);
 }
 
-/* Select */
+/* ============================= */
+/* SELECT                         */
+/* ============================= */
 .admin-page .admin-select {
   background-color: var(--surface);
   color: var(--text-light);
@@ -49,7 +64,9 @@
   padding: 6px 10px;
 }
 
-/* Delete button */
+/* ============================= */
+/* PULSANTE DELETE                */
+/* ============================= */
 .admin-page .admin-delete-btn {
   background: var(--orange-dark);
   color: #0b0b0b;

@@ -1,4 +1,6 @@
-/* footer.css */
+/* ========================== */
+/* FOOTER                     */
+/* ========================== */
 .footer {
   background: linear-gradient(180deg, #0f0f0f, #070707);
   color: var(--text-light);
@@ -6,6 +8,7 @@
   font-family: "Inter", sans-serif;
 }
 
+/* CONTAINER INTERNO FOOTER */
 .footer-container {
   display: flex;
   flex-wrap: wrap;
@@ -15,18 +18,21 @@
   gap: 2rem;
 }
 
+/* LOGO FOOTER */
 .footer-logo h2 {
   font-size: 1.8rem;
   color: var(--orange-bright);
   margin: 0;
 }
 
+/* LINK FOOTER */
 .footer-links {
   display: flex;
   gap: 3rem;
   flex-wrap: wrap;
 }
 
+/* SEZIONI FOOTER */
 .footer-section h4 {
   font-size: 0.95rem;
   font-weight: 600;
@@ -47,6 +53,7 @@
   color: var(--orange-bright);
 }
 
+/* FOOTER BOTTOM */
 .footer-bottom {
   text-align: center;
   margin-top: 2rem;
@@ -56,6 +63,7 @@
   padding-top: 1rem;
 }
 
+/* RESPONSIVE */
 @media (max-width: 720px) {
   .footer-container {
     flex-direction: column;

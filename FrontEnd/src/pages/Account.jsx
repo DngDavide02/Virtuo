@@ -5,19 +5,21 @@ import axiosInstance from "../js/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 import "../css/account.css";
 
+/* Componente principale della pagina Account / Profilo utente */
 export default function Account() {
-  const { user, logout, login } = useAuth();
-  const [games, setGames] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [genreFilter, setGenreFilter] = useState("");
-  const [platformFilter, setPlatformFilter] = useState("");
-  const [newUsername, setNewUsername] = useState("");
-  const [updating, setUpdating] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const { user, logout, login } = useAuth(); // Hook personalizzato per auth
+  const [games, setGames] = useState([]); // Libreria giochi dell'utente
+  const [loading, setLoading] = useState(false); // Stato caricamento
+  const [genreFilter, setGenreFilter] = useState(""); // Filtro genere
+  const [platformFilter, setPlatformFilter] = useState(""); // Filtro piattaforma
+  const [newUsername, setNewUsername] = useState(""); // Nuovo username
+  const [updating, setUpdating] = useState(false); // Stato aggiornamento username
+  const [error, setError] = useState(""); // Messaggi di errore
+  const [success, setSuccess] = useState(""); // Messaggi di successo
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook per navigazione programmatica
 
+  /* Recupera libreria giochi dall'API al mount e quando cambia l'utente */
   useEffect(() => {
     if (!user?.id) return;
     const fetchLibrary = async () => {
@@ -34,8 +36,10 @@ export default function Account() {
     fetchLibrary();
   }, [user]);
 
+  /* Navigazione alla pagina dettagli di un gioco */
   const goToDetails = (id) => navigate(`/games/${id}`);
 
+  /* Rimuove un gioco dalla libreria */
   const removeGame = async (id) => {
     try {
       await axiosInstance.delete(`/library/remove/${id}`);
@@ -45,6 +49,7 @@ export default function Account() {
     }
   };
 
+  /* Aggiorna username utente */
   const updateUsername = async (e) => {
     e.preventDefault();
     setError("");
@@ -74,6 +79,7 @@ export default function Account() {
     }
   };
 
+  /* Filtra giochi in base a genere e piattaforma, memoizzato per performance */
   const filteredGames = useMemo(() => {
     return games.filter((game) => {
       const genreMatch = !genreFilter || game.genre?.toLowerCase() === genreFilter.toLowerCase();
@@ -82,17 +88,19 @@ export default function Account() {
     });
   }, [games, genreFilter, platformFilter]);
 
-  if (!user) return <p>Loading...</p>;
+  if (!user) return <p>Loading...</p>; // Stato iniziale prima del caricamento utente
 
+  /* Genera array unici di generi e piattaforme per i filtri */
   const genres = Array.from(new Set(games.map((g) => g.genre).filter(Boolean)));
   const platforms = Array.from(new Set(games.map((g) => g.platform).filter(Boolean)));
 
   return (
     <Container className="account-container" role="main">
       <div className="account-wrapper">
+        {/* Sidebar con info utente */}
         <aside className="account-panel" aria-label="Account info">
           <div className="account-avatar" aria-hidden>
-            {user.username?.charAt(0).toUpperCase() || "U"}
+            {user.username?.charAt(0).toUpperCase() || "U"} {/* Avatar iniziale */}
           </div>
           <h2 className="account-name">{user.username}</h2>
           <p className="account-role">{user.role}</p>
@@ -106,6 +114,7 @@ export default function Account() {
             </p>
           </div>
 
+          {/* Form per aggiornamento username */}
           <form onSubmit={updateUsername} className="username-form" aria-live="polite" style={{ width: "100%", marginTop: "0.6rem" }}>
             <label htmlFor="new-username" style={{ display: "block", fontSize: "0.85rem", color: "var(--muted)", marginBottom: "0.35rem", textAlign: "left" }}>
               Change username
@@ -148,6 +157,7 @@ export default function Account() {
               </Button>
             </InputGroup>
 
+            {/* Messaggi di feedback */}
             <div style={{ marginTop: "0.6rem" }}>
               {error && (
                 <div className="alert alert-danger" role="alert" style={{ marginBottom: 6 }}>
@@ -163,6 +173,7 @@ export default function Account() {
             </div>
           </form>
 
+          {/* Pulsanti azioni utente */}
           <div className="account-buttons" style={{ marginTop: 12 }}>
             {user.role === "ADMIN" && (
               <Link to="/admin">
@@ -177,6 +188,7 @@ export default function Account() {
           </div>
         </aside>
 
+        {/* Sezione libreria giochi */}
         <section className="account-content" aria-label="Library">
           <div className="library-header">
             <h3 className="library-title">My Library</h3>
@@ -187,6 +199,7 @@ export default function Account() {
             </div>
           </div>
 
+          {/* Filtri per genere e piattaforma */}
           <div className="library-filters">
             <select value={genreFilter} onChange={(e) => setGenreFilter(e.target.value)}>
               <option value="">All Genres</option>
@@ -206,6 +219,7 @@ export default function Account() {
             </select>
           </div>
 
+          {/* Contenuto libreria */}
           {loading ? (
             <div className="library-page-spinner">
               <Spinner animation="border" />

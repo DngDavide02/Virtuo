@@ -1,23 +1,24 @@
 :root {
-  --container-w: 1400px;
-  --text-light: #f2f2f2;
-  --muted: #a0a0a0;
-  --orange-bright: #ff7304;
-  --nav-bg: rgba(10, 10, 10, 0.62);
-  --nav-bg-solid: rgba(8, 8, 8, 0.95);
+  /* Variabili globali per layout e palette */
+  --container-w: 1400px; /* Larghezza massima contenitore */
+  --text-light: #f2f2f2; /* Colore testo chiaro */
+  --muted: #a0a0a0; /* Colore testo attenuato */
+  --orange-bright: #ff7304; /* Colore accent arancione */
+  --nav-bg: rgba(10, 10, 10, 0.62); /* Sfondo navbar traslucido */
+  --nav-bg-solid: rgba(8, 8, 8, 0.95); /* Sfondo navbar pieno */
 }
 
 /* ---------- Base (desktop-first) ---------- */
 .app-navbar-minimal {
-  background: var(--nav-bg);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  background: var(--nav-bg); /* Sfondo semi-trasparente */
+  backdrop-filter: blur(6px); /* Effetto blur dietro */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02); /* Bordo sottile */
   padding: 0.12rem 0;
   height: 64px;
   display: flex;
   align-items: center;
-  z-index: 1000;
-  transition: background 220ms ease, box-shadow 220ms ease, transform 160ms ease;
+  z-index: 1000; /* Sopra contenuto */
+  transition: background 220ms ease, box-shadow 220ms ease, transform 160ms ease; /* Transizioni fluide */
 }
 
 .nav-container-minimal {
@@ -30,7 +31,7 @@
   gap: 1rem;
 }
 
-/* brand */
+/* brand (logo + link home) */
 .brand-minimal {
   display: flex;
   align-items: center;
@@ -42,18 +43,18 @@
   height: 56px;
   width: auto;
   display: block;
-  object-fit: contain;
+  object-fit: contain; /* Mantiene proporzioni */
 }
 
-/* right tools (desktop search + toggle) */
+/* right tools (area a destra: ricerca e toggle menu) */
 .nav-right-tools {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: auto;
+  margin-left: auto; /* Spinge a destra */
 }
 
-/* toggle */
+/* toggle button (hamburger) */
 .toggle-minimal {
   border: 1px solid rgba(255, 255, 255, 0.04);
   background: rgba(255, 255, 255, 0.02);
@@ -61,13 +62,13 @@
   border-radius: 8px;
 }
 
-/* nav items */
+/* nav items (link principali) */
 .nav-items-minimal {
   display: flex;
   gap: 0.6rem;
   align-items: center;
   margin-left: 0;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Permette il wrap su più righe */
 }
 
 .nav-link-minimal {
@@ -75,14 +76,14 @@
   font-weight: 600;
   padding: 8px 10px;
   border-radius: 10px;
-  transition: all 140ms ease;
+  transition: all 140ms ease; /* Transizioni rapide */
   font-size: 0.95rem;
 }
 .nav-link-minimal:hover,
 .nav-link-minimal:focus {
   color: var(--orange-bright);
   background: rgba(255, 115, 4, 0.06);
-  transform: translateY(-2px);
+  transform: translateY(-2px); /* Effetto sollevamento */
   text-decoration: none;
 }
 .nav-link-minimal.active,
@@ -91,7 +92,7 @@
   background: rgba(255, 115, 4, 0.06);
 }
 
-/* dropdown menu polished */
+/* dropdown menu (desktop) */
 .nav-dropdown-minimal .dropdown-menu {
   min-width: 220px;
   padding: 8px;
@@ -111,11 +112,11 @@
   background: rgba(255, 115, 4, 0.06);
 }
 
-/* desktop search style */
+/* desktop search bar */
 .desktop-search .form-control {
   background: rgba(255, 255, 255, 0.02);
   color: var(--text-light);
-  border-radius: 9999px;
+  border-radius: 9999px; /* Input pill */
   padding: 8px 12px;
   min-width: 260px;
   border: none;
@@ -126,12 +127,12 @@
   padding: 6px 12px;
 }
 
-/* overlay when mobile menu open (rendered by component) */
+/* overlay mostrato quando il menu mobile è aperto */
 .virt-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
-  z-index: 990; /* under navbar (1000) but above content */
+  z-index: 990; /* sotto navbar (1000) ma sopra contenuto */
   transition: opacity 200ms ease;
 }
 
@@ -144,14 +145,14 @@
 /* ---------- MOBILE / SMALL ---------- */
 @media (max-width: 991px) {
   .brand-logo-minimal {
-    height: 52px;
+    height: 52px; /* Logo leggermente più piccolo */
   }
 
-  /* make navbar taller & vertical on mobile, but keep header compact */
+  /* navbar verticale su mobile */
   .app-navbar-minimal {
     padding: 0.5rem 0.8rem;
     height: auto;
-    background: var(--nav-bg-solid);
+    background: var(--nav-bg-solid); /* Sfondo pieno */
     backdrop-filter: none;
     align-items: center;
   }
@@ -162,7 +163,7 @@
     gap: 0.5rem;
   }
 
-  /* Position collapse as full-width dropdown panel under navbar */
+  /* Pannello menu a tendina mobile */
   .mobile-navbar-collapse {
     position: absolute;
     left: 0;
@@ -172,10 +173,10 @@
     padding: 12px;
     border-radius: 0 0 12px 12px;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-    z-index: 1001; /* higher than overlay so links are clickable */
+    z-index: 1001; /* sopra overlay */
   }
 
-  /* nav items stacked */
+  /* nav items in colonna */
   .nav-items-minimal {
     display: flex;
     flex-direction: column;
@@ -199,9 +200,9 @@
     color: var(--orange-bright);
   }
 
-  /* dropdown items match nav links */
+  /* dropdown nel menu mobile */
   .nav-dropdown-minimal .dropdown-menu {
-    position: static; /* so it appears inline in the stacked menu */
+    position: static; /* inline con nav links */
     background: transparent;
     border: none;
     box-shadow: none;
@@ -215,7 +216,7 @@
     border-radius: 8px;
   }
 
-  /* mobile search (full width, placed under links) */
+  /* search full-width sotto i link */
   .mobile-search {
     margin-top: 6px;
   }
@@ -233,13 +234,13 @@
     margin-left: 8px;
   }
 
-  /* ensure toggle (hamburger) sits inside header */
+  /* toggle (hamburger) allineato al centro */
   .toggle-minimal {
     margin-left: 8px;
     align-self: center;
   }
 
-  /* small tweak: push desktop-search out on small */
+  /* nasconde la ricerca desktop */
   .desktop-search {
     display: none !important;
   }
