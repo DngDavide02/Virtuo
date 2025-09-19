@@ -6,6 +6,29 @@ import logo from "../assets/virtuo-logo.png";
 import { useAuth } from "../js/AuthContext";
 
 /**
+ * Componente SearchForm memoizzato per evitare perdita focus
+ */
+const SearchForm = React.memo(({ searchTerm, setSearchTerm, onSubmit, className }) => (
+  <Form className={className} onSubmit={onSubmit} role="search">
+    <InputGroup>
+      <FormControl
+        type="search"
+        placeholder="Search games..."
+        className="bg-dark text-white border-0 rounded-pill"
+        aria-label="Search"
+        size="sm"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <Button type="submit" variant="dark" size="sm" className="rounded-pill ms-2 border-0">
+        <i className="bi bi-search" aria-hidden="true" />
+        <span className="visually-hidden">Search</span>
+      </Button>
+    </InputGroup>
+  </Form>
+));
+
+/**
  * NavigationBar component con supporto a:
  * - Sticky navbar al scroll
  * - Ricerca giochi (desktop e mobile)
@@ -73,27 +96,6 @@ export default function NavigationBar() {
   // Chiude il menu mobile cliccando sui link
   const handleNavClick = () => expanded && setExpanded(false);
 
-  // Componente SearchForm riutilizzabile per desktop e mobile
-  const SearchForm = ({ className }) => (
-    <Form className={className} onSubmit={handleSearchSubmit} role="search">
-      <InputGroup>
-        <FormControl
-          type="search"
-          placeholder="Search games..."
-          className="bg-dark text-white border-0 rounded-pill"
-          aria-label="Search"
-          size="sm"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <Button type="submit" variant="dark" size="sm" className="rounded-pill ms-2 border-0">
-          <i className="bi bi-search" aria-hidden="true" />
-          <span className="visually-hidden">Search</span>
-        </Button>
-      </InputGroup>
-    </Form>
-  );
-
   return (
     <>
       {/* Placeholder per sticky */}
@@ -119,7 +121,7 @@ export default function NavigationBar() {
           {/* Ricerca desktop + toggle mobile */}
           <div className="nav-right-tools">
             <div className="d-none d-lg-flex align-items-center me-2 desktop-search">
-              <SearchForm className="d-flex" />
+              <SearchForm className="d-flex" searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSubmit={handleSearchSubmit} />
             </div>
             <Navbar.Toggle aria-controls="main-navbar" className="toggle-minimal" />
           </div>
@@ -191,7 +193,7 @@ export default function NavigationBar() {
 
               {/* Ricerca mobile */}
               <div className="d-lg-none mt-3 mobile-search">
-                <SearchForm />
+                <SearchForm className="" searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSubmit={handleSearchSubmit} />
               </div>
             </Nav>
           </Navbar.Collapse>
