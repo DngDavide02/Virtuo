@@ -9,12 +9,14 @@ export default function GameDetails() {
   const [game, setGame] = useState(null); // stato per i dati del gioco
   const [error, setError] = useState(""); // stato per messaggi di errore
   const [success, setSuccess] = useState(""); // stato per messaggi di successo
+  const [loading, setLoading] = useState(true); // stato loading
   const { user, addToLibrary } = useAuth(); // prende utente loggato e funzione per aggiornare la libreria
 
   // Effetto per recuperare i dati del gioco dall'API
   useEffect(() => {
     const fetchGame = async () => {
       try {
+        setLoading(true); // inizio loading
         console.log("[DEBUG] Fetching game with id:", id); // debug
         const res = await axiosInstance.get(`/games/${id}`);
         console.log("[DEBUG] Game data fetched:", res.data); // debug
@@ -22,6 +24,8 @@ export default function GameDetails() {
       } catch (err) {
         console.error("[DEBUG] Error fetching game:", err); // log errore
         setError("Unable to fetch game data."); // mostra messaggio errore
+      } finally {
+        setLoading(false); // fine loading
       }
     };
     fetchGame();
@@ -80,7 +84,16 @@ export default function GameDetails() {
     }
   };
 
-  if (!game) return <p>Loading...</p>; // mostra loading finché i dati non arrivano
+  // Spinner caricamento
+  if (loading)
+    return (
+      <div className="home-spinner">
+        <div className="spinner-circle"></div>
+        <span className="text-white">Loading game...</span>
+      </div>
+    );
+
+  if (!game) return <p>Game not found.</p>; // fallback se gioco non trovato
 
   return (
     <div className="game-details-container">
