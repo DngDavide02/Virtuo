@@ -39,12 +39,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             token = header.substring(7); // Estrae il token rimuovendo "Bearer "
             try {
                 username = jwtUtils.getUsernameFromJwtToken(token); // Estrae username dal JWT
-                System.out.println("[DEBUG] JWT username extracted: " + username);
             } catch (Exception e) {
-                System.out.println("[DEBUG] Invalid JWT: " + e.getMessage());
+                // token non valido
             }
-        } else {
-            System.out.println("[DEBUG] No Authorization header or bad format");
         }
 
         // Se abbiamo uno username valido e non siamo già autenticati
@@ -52,7 +49,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             try {
                 // Carica i dettagli dell'utente dal database
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                System.out.println("[DEBUG] Loaded UserDetails: " + userDetails);
 
                 // Valida il token JWT
                 if (jwtUtils.validateJwtToken(token)) {
@@ -61,13 +57,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                             userDetails, null, userDetails.getAuthorities()
                     );
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    System.out.println("[DEBUG] Authenticated user: " + username);
-                    System.out.println("[DEBUG] Authorities: " + userDetails.getAuthorities());
-                } else {
-                    System.out.println("[DEBUG] JWT validation failed");
                 }
             } catch (Exception e) {
-                System.out.println("[DEBUG] UserDetails load failed: " + e.getMessage());
+                // caricamento UserDetails fallito
             }
         }
 
