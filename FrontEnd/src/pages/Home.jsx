@@ -2,29 +2,43 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import axiosInstance from "../js/axiosInstance";
 
+// Importazione dei file CSS specifici per il componente e per Swiper
 import "../css/home.css";
 import "../css/swiper.css";
 
+// Importazione dei moduli Swiper React e dei relativi stili
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination, Autoplay } from "swiper";
 
+// Importazione dell'immagine di sfondo per la sezione hero
 import heroBackground from "../assets/hero.jpg";
 
+/**
+ * Componente principale Home che gestisce il rendering della homepage.
+ * Si occupa del fetch dei dati dei giochi, della gestione dello stato,
+ * del filtraggio e ordinamento e della visualizzazione delle varie sezioni.
+ */
 function Home() {
-  const [carouselGames, setCarouselGames] = useState([]);
-  const [topGames, setTopGames] = useState([]);
-  const [allGames, setAllGames] = useState([]);
-  const [spotlightGame, setSpotlightGame] = useState(null); // Nuovo stato per il gioco in evidenza
-  const [loading, setLoading] = useState(true);
+  // Dichiarazione degli stati principali del componente
+  const [carouselGames, setCarouselGames] = useState([]); // Giochi per il carosello
+  const [topGames, setTopGames] = useState([]); // Giochi per la sezione "Top Rated"
+  const [allGames, setAllGames] = useState([]); // Tutti i giochi disponibili
+  const [spotlightGame, setSpotlightGame] = useState(null); // Gioco in evidenza per la sezione spotlight
+  const [loading, setLoading] = useState(true); // Stato di caricamento per l'UI
 
+  // Stati per la funzionalità di ricerca e ordinamento
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState("relevance");
-  const [pageSize] = useState(12);
-  const [page, setPage] = useState(1);
+  const [pageSize] = useState(12); // Numero di giochi per pagina
+  const [page, setPage] = useState(1); // Pagina corrente per il "Load more"
 
+  /**
+   * Hook useEffect per il fetching dei dati all'avvio del componente.
+   * La dipendenza vuota [] assicura che venga eseguito una sola volta.
+   */
   useEffect(() => {
     const fetchGames = async () => {
       try {
@@ -32,13 +46,17 @@ function Home() {
         const res = await axiosInstance.get("/games");
         const games = res.data || [];
 
+        // Imposta i giochi per il carosello, limitando il numero in base alla larghezza dello schermo
         const maxCarouselItems = window.innerWidth < 768 ? 6 : 15;
         setCarouselGames(games.slice(0, maxCarouselItems));
 
+        // Ordina i giochi per rating e li imposta per la sezione "Top Rated"
         const sortedByRating = [...games].sort((a, b) => (b.rating || 0) - (a.rating || 0));
         setTopGames(sortedByRating.slice(0, 12));
-        setSpotlightGame(sortedByRating[0]); // Seleziona il gioco con il rating più alto
+        // Seleziona il gioco con il rating più alto per la sezione "Spotlight"
+        setSpotlightGame(sortedByRating[0]);
 
+        // Imposta tutti i giochi per le sezioni "Discover"
         setAllGames(games);
       } catch (err) {
         console.error("Error fetching games:", err);
@@ -49,11 +67,16 @@ function Home() {
     fetchGames();
   }, []);
 
+  /**
+   * Hook useMemo per ottimizzare il filtraggio e l'ordinamento dei giochi.
+   * Ricalcola la lista solo quando `allGames`, `query` o `sortBy` cambiano.
+   */
   const filteredAndSorted = useMemo(() => {
     let list = allGames.slice();
     if (query) {
       list = list.filter((g) => g.title.toLowerCase().includes(query.toLowerCase()));
     }
+    // Logica di ordinamento in base al valore di `sortBy`
     switch (sortBy) {
       case "name-asc":
         list.sort((a, b) => a.title.localeCompare(b.title));
@@ -76,9 +99,18 @@ function Home() {
     return list;
   }, [allGames, query, sortBy]);
 
+  /**
+   * Hook useMemo per la paginazione, basato sulla lista filtrata e ordinata.
+   * Restituisce solo i giochi da visualizzare nella pagina corrente.
+   */
   const paginated = useMemo(() => filteredAndSorted.slice(0, page * pageSize), [filteredAndSorted, page, pageSize]);
   const hasMore = paginated.length < filteredAndSorted.length;
 
+  /**
+   * Funzione di rendering per una singola card di gioco.
+   * Utilizzata per evitare la duplicazione del codice di markup.
+   * @param {object} game - Oggetto del gioco da renderizzare.
+   */
   const renderGameCard = (game) => (
     <div className="game-card large" key={game.id}>
       <div className="game-image-wrapper">
@@ -103,6 +135,7 @@ function Home() {
     </div>
   );
 
+  // Mostra un'animazione di caricamento se i dati non sono ancora stati caricati
   if (loading)
     return (
       <div className="home-spinner">
@@ -111,9 +144,12 @@ function Home() {
       </div>
     );
 
+  /**
+   * Struttura principale del JSX del componente.
+   */
   return (
     <>
-      {/* Hero Section */}
+      {/* Hero Section - Sfondo dinamico */}
       <section className="hero-section fade-in" style={{ backgroundImage: `url(${heroBackground})` }}>
         <div className="hero-overlay"></div>
         <div className="hero-content">
@@ -131,6 +167,7 @@ function Home() {
       </section>
 
       <div className="container">
+        {/* Sezione Giochi in Evidenza (Carosello Swiper) */}
         <section className="games-section fade-in">
           <h3 className="section-title">Featured Games</h3>
           <Swiper
@@ -157,11 +194,13 @@ function Home() {
           </Swiper>
         </section>
 
+        {/* Sezione "Top Rated" */}
         <section className="games-section top-rated fade-in">
           <h3 className="section-title">Top Rated</h3>
           <div className="games-grid">{topGames.map(renderGameCard)}</div>
         </section>
-        {/* --- Spotlight Section: Ora è dinamica --- */}
+
+        {/* Spotlight Section */}
         {spotlightGame && (
           <section className="spotlight-section" style={{ backgroundImage: `url(${spotlightGame.background_image || spotlightGame.thumbnail})` }}>
             <div className="spotlight-content">
@@ -179,7 +218,8 @@ function Home() {
             </div>
           </section>
         )}
-        {/* --- Fine Spotlight Section --- */}
+
+        {/* Sezione "Discover" con ricerca, ordinamento e paginazione */}
         <section className="games-section all-games fade-in">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
             <h3 className="section-title">Discover</h3>
@@ -204,6 +244,7 @@ function Home() {
           </div>
           <div className="all-games-grid">{paginated.map(renderGameCard)}</div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 18, gap: 12 }}>
+            {/* Pulsante "Load more" o "Reset" in base allo stato della paginazione */}
             {hasMore ? (
               <button onClick={() => setPage((p) => p + 1)} className="pill-button primary">
                 Load more

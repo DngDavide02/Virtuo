@@ -52,15 +52,12 @@ body {
   grid-template-columns: 1fr;
   align-items: center;
   min-height: 480px;
-  /* Rimuoviamo il border-radius qui se vuoi angoli vivi a bordo schermo */
-  /* border-radius: var(--radius-lg); */
   overflow: hidden;
-  padding: 0; /* Rimuoviamo il padding per occupare tutta la larghezza */
+  padding: 0;
   background-size: cover;
   background-position: center center;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(2px);
-  /* Aggiungiamo un margine inferiore per separarla dal contenuto successivo */
   margin-bottom: 2rem;
 }
 
@@ -71,21 +68,23 @@ body {
   z-index: 1;
 }
 
+/* MODIFICA PER L'OPZIONE 2: MINIMALISTA */
 .hero-content {
   position: relative;
   z-index: 2;
   padding: 2rem;
-  max-width: var(--container-w); /* Usa la stessa larghezza massima del container */
-  margin: 0 auto; /* Centra il contenuto */
-  /* Aggiungi padding laterale al contenuto, se la hero-section non lo ha più */
+  max-width: var(--container-w);
+  margin: 0 auto;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
-  box-shadow: var(--card-shadow);
+  /* Rimuovi tutti gli stili di sfondo e ombra per un look pulito */
+  background: none;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+
+  text-align: center; /* Centra il testo per un'estetica più pulita */
 }
 
 .hero-content h1 {
@@ -102,11 +101,13 @@ body {
   color: #e0e0e0;
   font-size: 1.05rem;
   max-width: 72ch;
+  margin: 0 auto 1.5rem; /* Centra il paragrafo */
 }
 
 .hero-buttons {
   display: flex;
   gap: 1rem;
+  justify-content: center; /* Centra i pulsanti */
 }
 
 .pill-button {
@@ -460,12 +461,10 @@ body {
   .hero-section {
     grid-template-columns: 1fr;
     min-height: 420px;
-    /* Non ha più padding qui, ma il suo contenuto sì */
   }
   .container {
     padding: 0 1rem;
   }
-  /* Adattamento del padding del contenuto della hero per schermi più piccoli */
   .hero-content {
     padding-left: 1rem;
     padding-right: 1rem;
