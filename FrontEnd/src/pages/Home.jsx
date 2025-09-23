@@ -1,29 +1,30 @@
-import React, { useEffect, useMemo, useState } from "react"; // React e hook
-import { Link } from "react-router-dom"; // Link per navigazione interna
-import axiosInstance from "../js/axiosInstance"; // Axios preconfigurato
+import React, { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import axiosInstance from "../js/axiosInstance";
 
-import "../css/home.css"; // Stili principali
-import "../css/swiper.css"; // Stili Swiper carousel
+import "../css/home.css";
+import "../css/swiper.css";
 
-import { Swiper, SwiperSlide } from "swiper/react"; // Swiper per carousel
+import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Navigation, Pagination, Autoplay } from "swiper"; // Moduli Swiper
+import { Navigation, Pagination, Autoplay } from "swiper";
+
+import heroBackground from "../assets/hero.jpg";
 
 function Home() {
-  // Stati principali
-  const [carouselGames, setCarouselGames] = useState([]); // Giochi per il carousel in home
-  const [topGames, setTopGames] = useState([]); // Giochi top rated
-  const [allGames, setAllGames] = useState([]); // Tutti i giochi
-  const [loading, setLoading] = useState(true); // Spinner caricamento
+  const [carouselGames, setCarouselGames] = useState([]);
+  const [topGames, setTopGames] = useState([]);
+  const [allGames, setAllGames] = useState([]);
+  const [spotlightGame, setSpotlightGame] = useState(null); // Nuovo stato per il gioco in evidenza
+  const [loading, setLoading] = useState(true);
 
-  const [query, setQuery] = useState(""); // Ricerca giochi
-  const [sortBy, setSortBy] = useState("relevance"); // Ordinamento giochi
-  const [pageSize] = useState(12); // Numero giochi per pagina
-  const [page, setPage] = useState(1); // Pagina corrente
+  const [query, setQuery] = useState("");
+  const [sortBy, setSortBy] = useState("relevance");
+  const [pageSize] = useState(12);
+  const [page, setPage] = useState(1);
 
-  // Fetch dei giochi al mount del componente
   useEffect(() => {
     const fetchGames = async () => {
       try {
@@ -31,14 +32,13 @@ function Home() {
         const res = await axiosInstance.get("/games");
         const games = res.data || [];
 
-        // Imposta carousel limitando il numero di giochi in base alla larghezza dello schermo
         const maxCarouselItems = window.innerWidth < 768 ? 6 : 15;
         setCarouselGames(games.slice(0, maxCarouselItems));
 
-        // Giochi top rated ordinati per rating
-        setTopGames([...games].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 12));
+        const sortedByRating = [...games].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        setTopGames(sortedByRating.slice(0, 12));
+        setSpotlightGame(sortedByRating[0]); // Seleziona il gioco con il rating più alto
 
-        // Tutti i giochi per la sezione "Discover"
         setAllGames(games);
       } catch (err) {
         console.error("Error fetching games:", err);
@@ -49,11 +49,10 @@ function Home() {
     fetchGames();
   }, []);
 
-  // Filtraggio e ordinamento giochi per Discover
   const filteredAndSorted = useMemo(() => {
     let list = allGames.slice();
     if (query) {
-      list = list.filter((g) => g.title.toLowerCase().includes(query.toLowerCase())); // filtro ricerca
+      list = list.filter((g) => g.title.toLowerCase().includes(query.toLowerCase()));
     }
     switch (sortBy) {
       case "name-asc":
@@ -77,15 +76,14 @@ function Home() {
     return list;
   }, [allGames, query, sortBy]);
 
-  // Paginazione
   const paginated = useMemo(() => filteredAndSorted.slice(0, page * pageSize), [filteredAndSorted, page, pageSize]);
   const hasMore = paginated.length < filteredAndSorted.length;
 
-  // Funzione helper per rendere le card dei giochi
   const renderGameCard = (game) => (
     <div className="game-card large" key={game.id}>
       <div className="game-image-wrapper">
         <img src={game.thumbnail || "/img/default-game.jpg"} alt={game.title || "Unknown"} loading="lazy" />
+        {game.platforms && game.platforms.length > 0 && <span className="card-badge">{game.platforms[0].name}</span>}
         <div className="card-overlay">
           <h4>{game.title || "Unknown"}</h4>
           <div className="card-buttons">
@@ -105,7 +103,6 @@ function Home() {
     </div>
   );
 
-  // Spinner caricamento
   if (loading)
     return (
       <div className="home-spinner">
@@ -115,9 +112,9 @@ function Home() {
     );
 
   return (
-    <div className="container">
+    <>
       {/* Hero Section */}
-      <section className="hero-section fade-in">
+      <section className="hero-section fade-in" style={{ backgroundImage: `url(${heroBackground})` }}>
         <div className="hero-overlay"></div>
         <div className="hero-content">
           <h1>Welcome to Virtuo</h1>
@@ -133,80 +130,94 @@ function Home() {
         </div>
       </section>
 
-      {/* Carousel Featured Games */}
-      <section className="games-section fade-in">
-        <h3 className="section-title">Featured Games</h3>
-        <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
-          spaceBetween={20}
-          slidesPerGroup={1}
-          navigation
-          pagination={{ clickable: true }}
-          autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-          breakpoints={{
-            320: { slidesPerView: 1 },
-            480: { slidesPerView: 1 },
-            640: { slidesPerView: 2 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-            1280: { slidesPerView: 4 },
-            1440: { slidesPerView: 5 },
-          }}
-        >
-          {carouselGames.map((game) => (
-            <SwiperSlide key={game.id}>{renderGameCard(game)}</SwiperSlide>
-          ))}
-        </Swiper>
-      </section>
+      <div className="container">
+        <section className="games-section fade-in">
+          <h3 className="section-title">Featured Games</h3>
+          <Swiper
+            modules={[Navigation, Pagination, Autoplay]}
+            spaceBetween={20}
+            slidesPerView={5}
+            slidesPerGroup={1}
+            navigation
+            pagination={{ clickable: true }}
+            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            breakpoints={{
+              320: { slidesPerView: 1 },
+              480: { slidesPerView: 1 },
+              640: { slidesPerView: 2 },
+              768: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+              1280: { slidesPerView: 4 },
+              1440: { slidesPerView: 5 },
+            }}
+          >
+            {carouselGames.map((game) => (
+              <SwiperSlide key={game.id}>{renderGameCard(game)}</SwiperSlide>
+            ))}
+          </Swiper>
+        </section>
 
-      {/* Top Rated Section */}
-      <section className="games-section top-rated fade-in">
-        <h3 className="section-title">Top Rated</h3>
-        <div className="games-grid">{topGames.map(renderGameCard)}</div>
-      </section>
-
-      {/* Discover / All Games Section */}
-      <section className="games-section all-games fade-in">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
-          <h3 className="section-title">Discover</h3>
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            {/* Ricerca */}
-            <input
-              type="search"
-              placeholder="Search games..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="search-input"
-              style={{ flex: 1, minWidth: 150 }}
-            />
-            {/* Ordinamento */}
-            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="all-games-dropdown">
-              <option value="relevance">Relevance</option>
-              <option value="name-asc">Name A–Z</option>
-              <option value="name-desc">Name Z–A</option>
-              <option value="rating-desc">Rating High → Low</option>
-              <option value="released-desc">Newest</option>
-              <option value="released-asc">Oldest</option>
-            </select>
+        <section className="games-section top-rated fade-in">
+          <h3 className="section-title">Top Rated</h3>
+          <div className="games-grid">{topGames.map(renderGameCard)}</div>
+        </section>
+        {/* --- Spotlight Section: Ora è dinamica --- */}
+        {spotlightGame && (
+          <section className="spotlight-section" style={{ backgroundImage: `url(${spotlightGame.background_image || spotlightGame.thumbnail})` }}>
+            <div className="spotlight-content">
+              <div className="spotlight-text">
+                <h4>Spotlight Game</h4>
+                <h3>{spotlightGame.title}</h3>
+                <p>
+                  {spotlightGame.description ||
+                    "Experience the future of action-RPG with stunning visuals and a captivating storyline. Explore a vast open world, forge alliances, and decide the fate of a shattered realm."}
+                </p>
+                <Link to={`/games/${spotlightGame.id}`} className="pill-button primary">
+                  View Details
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
+        {/* --- Fine Spotlight Section --- */}
+        <section className="games-section all-games fade-in">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
+            <h3 className="section-title">Discover</h3>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <input
+                type="search"
+                placeholder="Search games..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="search-input"
+                style={{ flex: 1, minWidth: 150 }}
+              />
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="all-games-dropdown">
+                <option value="relevance">Relevance</option>
+                <option value="name-asc">Name A–Z</option>
+                <option value="name-desc">Name Z–A</option>
+                <option value="rating-desc">Rating High → Low</option>
+                <option value="released-desc">Newest</option>
+                <option value="released-asc">Oldest</option>
+              </select>
+            </div>
           </div>
-        </div>
-        {/* Griglia giochi paginata */}
-        <div className="all-games-grid">{paginated.map(renderGameCard)}</div>
-        {/* Pulsanti Load More / Reset */}
-        <div style={{ display: "flex", justifyContent: "center", marginTop: 18, gap: 12 }}>
-          {hasMore ? (
-            <button onClick={() => setPage((p) => p + 1)} className="pill-button primary">
-              Load more
-            </button>
-          ) : (
-            <button onClick={() => setPage(1)} className="pill-button secondary">
-              Reset
-            </button>
-          )}
-        </div>
-      </section>
-    </div>
+          <div className="all-games-grid">{paginated.map(renderGameCard)}</div>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 18, gap: 12 }}>
+            {hasMore ? (
+              <button onClick={() => setPage((p) => p + 1)} className="pill-button primary">
+                Load more
+              </button>
+            ) : (
+              <button onClick={() => setPage(1)} className="pill-button secondary">
+                Reset
+              </button>
+            )}
+          </div>
+        </section>
+      </div>
+    </>
   );
 }
 
-export default Home; // Esporta il componente
+export default Home;
