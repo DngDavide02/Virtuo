@@ -1,57 +1,41 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../css/login.css";
+import { useForm } from "../hooks/useForm";
 import { loginUser } from "../js/authService";
 import { useAuth } from "../js/AuthContext";
+import "../css/login.css";
 
 function Login() {
-  // Local state for form inputs and error messages
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const navigate = useNavigate(); // for post-login redirect
-  const { login } = useAuth(); // login function from context
-
-  // Handle form submission
-  const handleLogin = async (e) => {
-    e.preventDefault(); // prevent page reload
-    setError(""); // reset error
-
-    try {
-      // loginUser sends request to backend and passes login callback to update context
-      const _res = await loginUser(username, password, login);
-
-      navigate("/"); // redirect to home after login
-    } catch (err) {
-      // show error if login fails
-      setError(err?.response?.data?.message || "Login failed");
-    }
-  };
+  const { values, errors, handleChange, handleSubmit } = useForm({ username: "", password: "" }, async (formData) => {
+    await loginUser(formData.username, formData.password, login);
+    navigate("/");
+  });
 
   return (
     <div className="login-container">
       <div className="login-card">
         <h2>Login to Virtuo</h2>
-        <form onSubmit={handleLogin}>
-          {/* Username input */}
-          <label htmlFor="username">Username</label>
-          <input type="text" id="username" placeholder="Your username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Your username" value={values.username} onChange={handleChange} required />
+          </div>
 
-          {/* Password input */}
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="••••••••" value={values.password} onChange={handleChange} required />
+          </div>
 
-          {/* Submit button */}
           <button type="submit" className="pill-button primary">
             Login
           </button>
 
-          {/* Error message */}
-          {error && <p className="error-message">{error}</p>}
+          {errors.submit && <p className="error-message">{errors.submit}</p>}
         </form>
 
-        {/* Footer with registration link */}
         <div className="login-footer">
           <span>Don't have an account? </span>
           <Link to="/register" className="pill-button secondary small">

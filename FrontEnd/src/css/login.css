@@ -1,36 +1,43 @@
-/* Contenitore principale della pagina di login */
+/* Main login page container */
 .login-container {
-  display: flex; /* Layout flessibile per centrare il contenuto */
-  justify-content: center; /* Centra orizzontalmente */
-  align-items: center; /* Centra verticalmente */
-  min-height: 100vh; /* Altezza minima a tutta la viewport */
-  background: radial-gradient(circle at top left, rgba(255, 115, 4, 0.02), transparent 5%), linear-gradient(180deg, #040404 0%, #070707 100%); /* Sfondo con gradienti */
-  font-family: "Inter", sans-serif; /* Font moderno */
-  padding: 1rem; /* Spaziatura interna */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, rgba(255, 115, 4, 0.02), transparent 5%), linear-gradient(180deg, #040404 0%, #070707 100%);
+  font-family: "Inter", sans-serif;
+  padding: 1rem;
 }
 
-/* Card che contiene il form di login */
+/* Login card container */
 .login-card {
-  background: var(--surface); /* Colore superficie definito in variabili */
-  border: 1px solid rgba(255, 255, 255, 0.05); /* Bordo leggero trasparente */
-  border-radius: 18px; /* Angoli arrotondati */
-  padding: 2.5rem 2rem; /* Spaziatura interna */
-  max-width: 400px; /* Larghezza massima */
-  width: 100%; /* Adattabile */
-  box-shadow: 0 8px 30px rgba(2, 2, 2, 0.7); /* Ombra profonda */
-  display: flex; /* Layout verticale */
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  padding: 2.5rem 2rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 8px 30px rgba(2, 2, 2, 0.7);
+  display: flex;
   flex-direction: column;
-  gap: 1.5rem; /* Distanza tra gli elementi */
+  gap: 1.5rem;
 }
 
-/* Titolo del form */
+/* Form title */
 .login-card h2 {
   margin: 0 0 1rem;
-  color: var(--orange-bright); /* Colore evidenziato */
+  color: var(--orange-bright);
   text-align: center;
 }
 
-/* Etichette dei campi input */
+/* Form group styling */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Input field labels */
 .login-card label {
   font-size: 0.85rem;
   color: var(--muted); /* Colore testuale tenue */
@@ -48,7 +55,9 @@
   color: var(--text-light); /* Testo chiaro */
   margin-bottom: 1rem;
   outline: none; /* Rimuove bordo di default */
-  transition: border 0.2s ease, box-shadow 0.2s ease; /* Animazione focus */
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease; /* Animazione focus */
 }
 
 /* Stato focus input */
