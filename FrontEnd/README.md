@@ -202,16 +202,6 @@ MAILGUN_API_KEY=your-api-key
 - `POST /api/library/add` - Add game to library
 - `DELETE /api/library/{id}` - Remove game
 
-## What's Coming
-
-### New Features
-
-- **Mobile App** - Smartphone version
-- **Review System** - Rate and comment on games
-- **Wishlist** - Save games to try later
-- **Social Features** - Friends and sharing
-- **Admin Panel** - Content management
-
 ### Technical Improvements
 
 - **Docker** - Simplified deployment
@@ -234,10 +224,6 @@ Want to help us improve Virtuo? Perfect!
 - Write clear and descriptive commits
 - Add tests for new features
 - Document important changes
-
-## License
-
-This project is distributed under MIT license - see the [LICENSE](LICENSE) file for details.
 
 ---
 
