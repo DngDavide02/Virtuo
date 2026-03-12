@@ -41,7 +41,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Utente loggato */}
+          {/* Logged in user */}
           <Route
             path="/account"
             element={
@@ -59,7 +59,7 @@ function App() {
             }
           />
 
-          {/* Solo admin */}
+          {/* Admin only */}
           <Route
             path="/admin"
             element={

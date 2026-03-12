@@ -5,46 +5,46 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.util.Date;
 
-// Componente per gestire la creazione e validazione dei token JWT
+// Component for handling JWT token creation and validation
 @Component
 public class JwtUtils {
 
-    // Chiave segreta definita nel file application.properties
+    // Secret key defined in application.properties
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    // Durata del token: 24 ore in millisecondi
+    // Token duration: 24 hours in milliseconds
     private final long jwtExpirationMs = 24 * 60 * 60 * 1000;
 
-    // Genera un token JWT a partire dallo username
+    // Generates JWT token from username
     public String generateJwtToken(String username) {
         return Jwts.builder()
-                .setSubject(username) // imposta lo username come soggetto del token
-                .setIssuedAt(new Date()) // data di creazione del token
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)) // scadenza
-                .signWith(SignatureAlgorithm.HS512, jwtSecret) // firma il token con HS512 e la chiave segreta
-                .compact(); // compattalo in stringa
+                .setSubject(username) // sets username as token subject
+                .setIssuedAt(new Date()) // token creation date
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)) // expiration
+                .signWith(SignatureAlgorithm.HS512, jwtSecret) // signs token with HS512 and secret key
+                .compact(); // compact to string
     }
 
-    // Estrae lo username dal token JWT
+    // Extracts username from JWT token
     public String getUsernameFromJwtToken(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtSecret) // usa la chiave segreta per decodificare
-                .parseClaimsJws(token) // parse del token
-                .getBody() // ottiene il corpo del token (claims)
-                .getSubject(); // ritorna lo username
+                .setSigningKey(jwtSecret) // uses secret key to decode
+                .parseClaimsJws(token) // parse token
+                .getBody() // gets token body (claims)
+                .getSubject(); // returns username
     }
 
-    // Valida il token JWT
+    // Validates JWT token
     public boolean validateJwtToken(String token) {
         try {
             Jwts.parser()
-                    .setSigningKey(jwtSecret) // chiave segreta per verificare firma
-                    .parseClaimsJws(token); // tenta di fare il parse
-            return true; // se non ci sono eccezioni, il token è valido
+                    .setSigningKey(jwtSecret) // secret key to verify signature
+                    .parseClaimsJws(token); // attempts to parse
+            return true; // if no exceptions, token is valid
         } catch (JwtException | IllegalArgumentException e) {
-            System.out.println("[DEBUG] JWT validation error: " + e.getMessage()); // log errore
-            return false; // token non valido
+            System.out.println("[DEBUG] JWT validation error: " + e.getMessage()); // error log
+            return false; // invalid token
         }
     }
 }

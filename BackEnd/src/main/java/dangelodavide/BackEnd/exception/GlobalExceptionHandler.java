@@ -10,40 +10,40 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
-// Questa classe gestisce in modo centralizzato tutte le eccezioni lanciate dai controller
+// This class centrally handles all exceptions thrown by controllers
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Gestisce le eccezioni di tipo ResourceNotFoundException
+    // Handles ResourceNotFoundException exceptions
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleResourceNotFound(ResourceNotFoundException ex) {
         Map<String, String> error = new HashMap<>();
-        error.put("error", ex.getMessage()); // Inserisce il messaggio dell'eccezione nella mappa
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND); // Ritorna status 404
+        error.put("error", ex.getMessage()); // Inserts exception message in map
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND); // Returns 404 status
     }
 
-    // Gestisce gli errori di validazione dei campi (@Valid)
+    // Handles field validation errors (@Valid)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
-        // Cicla su tutti gli errori di validazione dei campi e li aggiunge alla mappa
+        // Loop through all field validation errors and add them to map
         ex.getBindingResult().getFieldErrors().forEach(err -> errors.put(err.getField(), err.getDefaultMessage()));
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST); // Ritorna status 400
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST); // Returns 400 status
     }
 
-    // Gestisce le eccezioni di accesso negato (es. quando un utente senza ruolo prova a fare operazioni admin)
+    // Handles access denied exceptions (e.g., when user without role tries admin operations)
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Map<String, String>> handleAccessDenied(AccessDeniedException ex) {
         Map<String, String> error = new HashMap<>();
-        error.put("error", "Access denied"); // Messaggio generico di accesso negato
-        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN); // Ritorna status 403
+        error.put("error", "Access denied"); // Generic access denied message
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN); // Returns 403 status
     }
 
-    // Gestisce tutte le altre eccezioni generiche non catturate dai precedenti handler
+    // Handles all other generic exceptions not caught by previous handlers
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGeneric(Exception ex) {
         Map<String, String> error = new HashMap<>();
-        error.put("error", "Internal server error: " + ex.getMessage()); // Messaggio generico con info eccezione
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR); // Ritorna status 500
+        error.put("error", "Internal server error: " + ex.getMessage()); // Generic message with exception info
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR); // Returns 500 status
     }
 }

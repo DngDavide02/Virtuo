@@ -27,7 +27,7 @@ axiosInstance.interceptors.response.use(
       window.location.replace("/login");
     }
     return Promise.reject(error); // Propaga l'errore per gestione superiore
-  }
+  },
 );
 
 export default axiosInstance; // Istanza Axios centralizzata per l’app

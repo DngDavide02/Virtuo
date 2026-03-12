@@ -25,14 +25,14 @@ public class LibraryService {
         this.userRepository = userRepository;
     }
 
-    // Aggiunge un gioco alla libreria di un utente, creando il gioco se non esiste già nel DB
+    // Adds a game to user's library, creating the game if it doesn't exist in database yet
     @Transactional
     public void addGameToLibrary(User user, GameDTO gameDTO) {
-        // Controllo se il gioco esiste nel DB
+        // Check if game exists in database
         Game game = gameRepository.findById((long) gameDTO.id()).orElse(null);
 
         if (game == null) {
-            // Creazione nuova entità Game dal DTO
+            // Create new Game entity from DTO
             game = new Game();
             game.setId(gameDTO.id());
             game.setTitle(gameDTO.title());
@@ -49,13 +49,13 @@ public class LibraryService {
             game = gameRepository.save(game);
         }
 
-        // Recupera la libreria dell'utente o ne crea una nuova
+        // Retrieve user's library or create a new one
         Library library = libraryRepository.findByUser(user).orElseGet(() -> {
             Library newLib = new Library(user);
             return libraryRepository.save(newLib);
         });
 
-        // Controllo duplicati usando l'id del gioco
+        // Check for duplicates using game ID
         boolean alreadyInLibrary = library.getGames()
                 .stream()
                 .anyMatch(g -> g.getId().equals(gameDTO.id()));
@@ -64,12 +64,12 @@ public class LibraryService {
             throw new RuntimeException("Game already in library");
         }
 
-        // Aggiunge il gioco e salva la libreria
+        // Add game and save library
         library.addGame(game);
         libraryRepository.save(library);
     }
 
-    // Restituisce la lista dei giochi presenti nella libreria di un utente come DTO
+    // Returns list of games in user's library as DTOs
     public List<GameDTO> getLibraryGamesByUser(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -95,20 +95,20 @@ public class LibraryService {
                 .toList();
     }
 
-    // Rimuove un gioco dalla libreria dell'utente
+    // Removes a game from user's library
     @Transactional
     public void removeGameFromLibrary(User user, Integer externalGameId) {
         Library library = libraryRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Library not found"));
 
-        // Trova il gioco nella libreria usando l'id esterno
+        // Find game in library using external ID
         Game gameToRemove = library.getGames()
                 .stream()
                 .filter(g -> g.getId().equals(externalGameId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Game not found in user library"));
 
-        // Rimuove il gioco e salva la libreria
+        // Remove game and save library
         library.removeGame(gameToRemove);
         libraryRepository.save(library);
     }

@@ -8,15 +8,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-// Implementa UserDetails di Spring Security per integrare il nostro User con il sistema di sicurezza
+// Implements Spring Security UserDetails to integrate our User with the security system
 public class UserDetailsImpl implements UserDetails {
 
-    private final Long id; // id dell'utente
-    private final String username; // username dell'utente
-    private final String password; // password codificata
-    private final Collection<? extends GrantedAuthority> authorities; // ruoli/permessi dell'utente
+    private final Long id; // user id
+    private final String username; // user username
+    private final String password; // encoded password
+    private final Collection<? extends GrantedAuthority> authorities; // user roles/permissions
 
-    // Costruttore principale
+    // Main constructor
     public UserDetailsImpl(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
@@ -24,9 +24,9 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
-    // Metodo statico per creare un UserDetailsImpl a partire da un'entità User
+    // Static method to create UserDetailsImpl from a User entity
     public static UserDetailsImpl build(User user) {
-        // Crea la lista di authorities a partire dal ruolo dell'utente (es. ROLE_USER o ROLE_ADMIN)
+        // Creates authorities list from user role (e.g., ROLE_USER or ROLE_ADMIN)
         List<GrantedAuthority> authorities = List.of(
                 new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
         );
@@ -38,43 +38,43 @@ public class UserDetailsImpl implements UserDetails {
         );
     }
 
-    // Restituisce le authorities (ruoli) dell'utente
+    // Returns user authorities (roles)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
 
-    // Restituisce la password codificata
+    // Returns encoded password
     @Override
     public String getPassword() {
         return password;
     }
 
-    // Restituisce lo username
+    // Returns username
     @Override
     public String getUsername() {
         return username;
     }
 
-    // Restituisce true se l'account non è scaduto
+    // Returns true if account is not expired
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    // Restituisce true se l'account non è bloccato
+    // Returns true if account is not locked
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    // Restituisce true se le credenziali non sono scadute
+    // Returns true if credentials are not expired
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
-    // Restituisce true se l'utente è abilitato
+    // Returns true if user is enabled
     @Override
     public boolean isEnabled() {
         return true;

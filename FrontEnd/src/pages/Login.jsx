@@ -1,30 +1,30 @@
-import React, { useState } from "react"; // React e hook useState
-import { Link, useNavigate } from "react-router-dom"; // Link per navigazione interna, useNavigate per redirect
-import "../css/login.css"; // Stili login
-import { loginUser } from "../js/authService"; // Funzione per effettuare login
-import { useAuth } from "../js/AuthContext"; // Contesto auth
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../css/login.css";
+import { loginUser } from "../js/authService";
+import { useAuth } from "../js/AuthContext";
 
 function Login() {
-  // Stati locali per input e messaggi di errore
+  // Local state for form inputs and error messages
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const navigate = useNavigate(); // per redirect post-login
-  const { login } = useAuth(); // funzione login dal contesto
+  const navigate = useNavigate(); // for post-login redirect
+  const { login } = useAuth(); // login function from context
 
-  // Gestione submit form
+  // Handle form submission
   const handleLogin = async (e) => {
-    e.preventDefault(); // previene reload pagina
-    setError(""); // reset errore
+    e.preventDefault(); // prevent page reload
+    setError(""); // reset error
 
     try {
-      // loginUser invia richiesta al backend e passa il callback login per aggiornare il contesto
+      // loginUser sends request to backend and passes login callback to update context
       const _res = await loginUser(username, password, login);
 
-      navigate("/"); // redirect a home dopo login
+      navigate("/"); // redirect to home after login
     } catch (err) {
-      // mostra errore se fallisce
+      // show error if login fails
       setError(err?.response?.data?.message || "Login failed");
     }
   };
@@ -34,24 +34,24 @@ function Login() {
       <div className="login-card">
         <h2>Login to Virtuo</h2>
         <form onSubmit={handleLogin}>
-          {/* Input username */}
+          {/* Username input */}
           <label htmlFor="username">Username</label>
           <input type="text" id="username" placeholder="Your username" value={username} onChange={(e) => setUsername(e.target.value)} required />
 
-          {/* Input password */}
+          {/* Password input */}
           <label htmlFor="password">Password</label>
           <input type="password" id="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
 
-          {/* Pulsante submit */}
+          {/* Submit button */}
           <button type="submit" className="pill-button primary">
             Login
           </button>
 
-          {/* Messaggio di errore */}
+          {/* Error message */}
           {error && <p className="error-message">{error}</p>}
         </form>
 
-        {/* Footer con link alla registrazione */}
+        {/* Footer with registration link */}
         <div className="login-footer">
           <span>Don't have an account? </span>
           <Link to="/register" className="pill-button secondary small">
@@ -63,4 +63,4 @@ function Login() {
   );
 }
 
-export default Login; // esporta componente
+export default Login;
