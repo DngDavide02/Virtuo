@@ -8,15 +8,21 @@ A modern gaming platform to discover, play, and manage your favorite video games
 
 Virtuo is a complete platform that lets you explore a vast catalog of free games, with advanced search features, filters, and personal management. Built with modern technologies, it offers a fluid and professional user experience.
 
-## Try it Live
-
-[Live Demo](https://virtuo-demo.example.com) _(Coming soon)_
-
 ## Gallery
 
-![Homepage](./screenshots/homepage.png) ![Game Details](./screenshots/game-details.png)
+### Application Screenshots
 
-_(Screenshots to be added)_
+![Homepage - Game Discovery](./ScreenShot/Screenshot%202026-03-12%20113718.png)
+_Homepage with featured games carousel and search functionality_
+
+![Discover Games](./ScreenShot/Screenshot%202026-03-12%20113835.png)
+_Advanced game discovery with filters and category navigation_
+
+![User Profile](./ScreenShot/Screenshot%202026-03-12%20113931.png)
+_User profile page with personal library and preferences_
+
+![Chat Assistant](./ScreenShot/Screenshot%202026-03-12%20115548.png)
+_Intelligent chat assistant providing game recommendations and support_
 
 ## Technologies Used
 
@@ -37,26 +43,59 @@ _(Screenshots to be added)_
 
 ## Main Features
 
-### For Users
+### User Authentication & Profile Management
 
-- **Registration and Login** - Secure account with JWT
-- **Personal Profile** - Manage your preferences
-- **Game Library** - Your personal collection
+- **Registration and Login** - Secure account with JWT tokens
+- **Personal Profile** - Manage your gaming preferences and statistics
+- **Avatar Customization** - Personalize your gaming identity
 
-### For Games
+### Game Discovery & Management
 
-- **Complete Catalog** - Hundreds of free games
-- **Featured Carousel** - Best games highlighted
-- **Advanced Search** - Find what you're looking for instantly
-- **Filters and Sorting** - Organize as you prefer
-- **Smart Pagination** - Quick navigation through content
+- **Complete Catalog** - Hundreds of free games with detailed information
+- **Featured Carousel** - Best and trending games highlighted on homepage
+- **Advanced Search** - Find games by name, genre, or platform
+- **Smart Filters** - Refine results by category, rating, or release date
+- **Personal Library** - Add, organize, and track your game collection
+
+### Intelligent Chat Assistant
+
+- **AI-Powered Gaming Assistant** - Get personalized game recommendations and help
+- **Natural Conversations** - Context-aware responses that remember your preferences
+- **Game Expertise** - Detailed information about gameplay, story, and features
+- **Smart Follow-ups** - Intelligent questions based on conversation context
+
+### User Experience
+
+- **Responsive Design** - Perfect experience on desktop, tablet, and mobile
+- **Intuitive Interface** - Easy navigation and game discovery
+- **Real-time Updates** - Instant notifications and chat responses
+- **Performance Optimized** - Fast loading and smooth interactions
 
 ### For Experience
 
 - **Responsive Design** - Perfect on all devices
 - **Intuitive Interface** - Easy to use
-- **Game Details** - All the information you need
+- **Game Details** - All information you need
 - **Contact System** - Write to us for any question
+- **Intelligent Chat** - AI-powered gaming assistant with context awareness
+
+### Intelligent Chat System
+
+Our advanced chat system features:
+
+**AI-Powered Responses**: Natural conversation flow with intelligent intent recognition
+**Game Expertise**: Detailed knowledge of popular games and genres
+**Context Awareness**: Remembers conversation history for relevant follow-ups
+**Dynamic Interactions**: Adapts responses based on user preferences
+**Responsive Design**: Optimized for all devices with smooth animations
+
+**Key Features:**
+
+- Pattern-based intent recognition (recommendations, help, new releases)
+- Comprehensive game database with detailed information
+- Smart follow-up questions and contextual responses
+- Multiple response templates for natural conversation flow
+- Performance-optimized with React hooks and memoization
 
 ## Project Architecture
 
